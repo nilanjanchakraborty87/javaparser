@@ -68,6 +68,7 @@ public final class CompilationUnit extends Node {
     }
 
     public CompilationUnit(PackageDeclaration pakage, List<ImportDeclaration> imports, List<TypeDeclaration> types, List<Comment> comments) {
+        System.out.println("CU SETTING COMMENTS "+comments);
         setPackage(pakage);
         setImports(imports);
         setTypes(types);
@@ -76,6 +77,7 @@ public final class CompilationUnit extends Node {
 
     public CompilationUnit(int beginLine, int beginColumn, int endLine, int endColumn, PackageDeclaration pakage, List<ImportDeclaration> imports, List<TypeDeclaration> types, List<Comment> comments) {
         super(beginLine, beginColumn, endLine, endColumn);
+        System.out.println("CU SETTING COMMENTS "+comments);
         setPackage(pakage);
         setImports(imports);
         setTypes(types);
