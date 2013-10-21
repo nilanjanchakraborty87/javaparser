@@ -22,6 +22,7 @@
 package japa.parser.ast;
 
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import japa.parser.ast.visitor.DumpVisitor;
@@ -45,6 +46,8 @@ public abstract class Node {
 	private int endColumn;
 	
 	private Node parentNode;
+
+    private List<Node> childrenNodes = null;
 
 	/**
 	 * This attribute can store additional information from semantic analysis.
@@ -218,7 +221,11 @@ public abstract class Node {
 	}
 
 	public void setParentNode(Node parentNode) {
+        if (this.parentNode!=null){
+            this.parentNode.getChildrenNodes().remove(this);
+        }
 		this.parentNode = parentNode;
+        parentNode.getChildrenNodes().add(this);
 	}
 
 	protected void setAsParentNodeOf(List<? extends Node> childNodes) {
@@ -236,4 +243,11 @@ public abstract class Node {
 			childNode.setParentNode(this);
 		}
 	}
+
+    public List<Node> getChildrenNodes(){
+        if (childrenNodes==null){
+            childrenNodes = new LinkedList<Node>();
+        }
+        return childrenNodes;
+    }
 }

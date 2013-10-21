@@ -59,7 +59,8 @@ public class TestDumper {
 				"/** multi-line\r\n javadoc\n*/" + //
 				"int e = 0;" + //
 				"}\n" + //
-				"//final comment" + //
+				"//semi-final comment\n" + //
+                "//final comment\n" + //
 				"";
 		final String source_without_comment = //
 		"package japa.parser.javacc;\n" + //
@@ -88,6 +89,9 @@ public class TestDumper {
 		assertEquals(source_without_comment, cu.toString());
 		// FIXME should be 6, "final comment" is missing
 		//        assertEquals(6, cu.getComments().size());
-		assertEquals(5, cu.getComments().size());
+        // two are the comments which properly belong to the compilation-unit
+		assertEquals(2, cu.getComments().size());
+        // seven are the comments which are contained in the compilation-unit and children
+        assertEquals(7, cu.getAllComments().size());
 	}
 }

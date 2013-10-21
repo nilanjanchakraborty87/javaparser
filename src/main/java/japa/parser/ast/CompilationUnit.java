@@ -27,9 +27,11 @@ import japa.parser.ast.body.EmptyTypeDeclaration;
 import japa.parser.ast.body.EnumDeclaration;
 import japa.parser.ast.body.JavadocComment;
 import japa.parser.ast.body.TypeDeclaration;
+import japa.parser.ast.visitor.CommentsCollectorTreeVisitor;
 import japa.parser.ast.visitor.GenericVisitor;
 import japa.parser.ast.visitor.VoidVisitor;
 
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -68,7 +70,6 @@ public final class CompilationUnit extends Node {
     }
 
     public CompilationUnit(PackageDeclaration pakage, List<ImportDeclaration> imports, List<TypeDeclaration> types, List<Comment> comments) {
-        System.out.println("CU SETTING COMMENTS "+comments);
         setPackage(pakage);
         setImports(imports);
         setTypes(types);
@@ -77,7 +78,6 @@ public final class CompilationUnit extends Node {
 
     public CompilationUnit(int beginLine, int beginColumn, int endLine, int endColumn, PackageDeclaration pakage, List<ImportDeclaration> imports, List<TypeDeclaration> types, List<Comment> comments) {
         super(beginLine, beginColumn, endLine, endColumn);
-        System.out.println("CU SETTING COMMENTS "+comments);
         setPackage(pakage);
         setImports(imports);
         setTypes(types);
@@ -154,6 +154,15 @@ public final class CompilationUnit extends Node {
     public void setComments(List<Comment> comments) {
         this.comments = comments;
 		setAsParentNodeOf(this.comments);
+    }
+
+    public List<Comment> getAllComments(){
+        List<Comment> comments = new LinkedList<Comment>();
+        comments.addAll(getComments());
+        CommentsCollectorTreeVisitor cctv = new CommentsCollectorTreeVisitor();
+        cctv.visitDepthFirst(this);
+        comments.addAll(cctv.getComments());
+        return comments;
     }
 
     /**
