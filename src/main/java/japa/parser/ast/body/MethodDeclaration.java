@@ -212,11 +212,11 @@ public final class MethodDeclaration extends BodyDeclaration implements Document
      */
     @Override
     public String getDeclarationAsString() {
-        return getDeclarationAsString(true, true);
+        return getDeclarationAsString(true, true, true);
     }
 
     @Override
-    public String getDeclarationAsString(boolean includingModifiers, boolean includingThrows) {
+    public String getDeclarationAsString(boolean includingModifiers, boolean includingParameterNames, boolean includingThrows) {
         StringBuffer sb = new StringBuffer();
         if (includingModifiers) {
             AccessSpecifier accessSpecifier = ModifierSet.getAccessSpecifier(getModifiers());
@@ -238,7 +238,6 @@ public final class MethodDeclaration extends BodyDeclaration implements Document
                 sb.append("synchronized ");
             }
         }
-        // TODO verify it does not print comments connected to the type
         sb.append(getType().toStringWithoutComments());
         sb.append(" ");
         sb.append(getName());
@@ -251,7 +250,11 @@ public final class MethodDeclaration extends BodyDeclaration implements Document
             } else {
                 sb.append(", ");
             }
-            sb.append(param.toStringWithoutComments());
+            if (includingParameterNames) {
+                sb.append(param.toStringWithoutComments());
+            } else {
+                sb.append(param.getType().toStringWithoutComments());
+            }
         }
         sb.append(")");
         if (includingThrows) {

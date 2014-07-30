@@ -32,6 +32,6 @@ public class TestMethodDeclaration {
 
         ClassOrInterfaceDeclaration clazz = (ClassOrInterfaceDeclaration)cu.getTypes().get(0);
         MethodDeclaration method = (MethodDeclaration)clazz.getMembers().get(0);
-        assertEquals("List<String> aMethod(int a, String b)", method.getDeclarationAsString(false, false));
+        assertEquals("List<String> aMethod(int, String)", method.getDeclarationAsString(false, false, false));
     }
 }

@@ -9,7 +9,7 @@ package japa.parser.ast.body;
 public interface WithDeclaration {
 
     /**
-     * As {@link WithDeclaration#getDeclarationAsString(boolean, boolean)} including
+     * As {@link WithDeclaration#getDeclarationAsString(boolean, boolean, boolean)} including
      * both the modifiers and the throws clause.
      */
     String getDeclarationAsString();
@@ -18,7 +18,8 @@ public interface WithDeclaration {
      * A simple representation of the element declaration.
      * It should fit one string.
      * @param includingModifiers flag to include the modifiers (if present) in the string produced
+     * @param includingParameterNames flag to include parameter names (if present) in the string produced
      * @param includingThrows flag to include the throws clause (if present) in the string produced
      */
-    String getDeclarationAsString(boolean includingModifiers, boolean includingThrows);
+    String getDeclarationAsString(boolean includingModifiers, boolean includingParameterNames, boolean includingThrows);
 }

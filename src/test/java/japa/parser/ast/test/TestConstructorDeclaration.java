@@ -31,6 +31,6 @@ public class TestConstructorDeclaration {
 
         ClassOrInterfaceDeclaration clazz = (ClassOrInterfaceDeclaration)cu.getTypes().get(0);
         ConstructorDeclaration constructor = (ConstructorDeclaration)clazz.getMembers().get(0);
-        assertEquals("ClassWithAConstructor(int a, String b)", constructor.getDeclarationAsString(false, false));
+        assertEquals("ClassWithAConstructor(int, String)", constructor.getDeclarationAsString(false, false, false));
     }
 }
