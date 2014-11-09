@@ -9,12 +9,12 @@ import java.util.List;
 
 import static org.jbehave.core.io.CodeLocations.codeLocationFromClass;
 
-public class ParsingTest {
+public class ParsingJava8Test {
 
     @Test
     public void run() throws Throwable {
         Embedder embedder = new ParsingEmbedder();
-        List<String> storyPaths = new StoryFinder().findPaths(codeLocationFromClass(this.getClass()), "**/bdd/parsing_scenarios.story", "");
+        List<String> storyPaths = new StoryFinder().findPaths(codeLocationFromClass(this.getClass()), "**/bdd/parsing_java8_scenarios.story", "");
         embedder.runStoriesAsPaths(storyPaths);
     }
 }

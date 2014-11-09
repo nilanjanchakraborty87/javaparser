@@ -30,6 +30,7 @@ import java.util.Map;
 
 import static org.hamcrest.text.IsEqualIgnoringWhiteSpace.equalToIgnoringWhiteSpace;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.hamcrest.CoreMatchers.is;
 
@@ -194,6 +195,11 @@ public class ManipulationSteps {
     public void thenTheBlockStmtContentIs(int position, String expectedContent) {
         Statement statementUnderTest = blockStmt.getStmts().get(position-1);
         assertThat(statementUnderTest.toString(), is(expectedContent));
+    }
+
+    @Then("the Statement is parsed correctly")
+    public void thenStatementIsParserdCorrectly() {
+        assertNotNull(statement);
     }
 
     @Then("Statement toString is \"$expectedContent\"")
