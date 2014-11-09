@@ -1066,6 +1066,7 @@ TOKEN :
 | < INCR: "++" >
 | < DECR: "--" >
 | < PLUS: "+" >
+| < ARROW: "->" >
 | < MINUS: "-" >
 | < STAR: "*" >
 | < SLASH: "/" >
@@ -3406,4 +3407,23 @@ Expression DefaultValue():
       
       return ret; 
   }
+}
+
+Expression LambdaExpr():
+{
+    Expression body;
+    int line;
+    int column;
+    List<Parameter> parameters = null;
+}
+{
+    <LPAREN> { line=token.beginLine; column=token.beginColumn;}
+
+
+    <RPAREN> <ARROW> body = Expression()
+
+    {
+        LambdaExpr lambda = new LambdaExpr(line, column, token.endLine, token.endColumn, body, parameters);
+        return lambda;
+    }
 }
