@@ -49,40 +49,7 @@ import japa.parser.ast.comments.BlockComment;
 import japa.parser.ast.comments.Comment;
 import japa.parser.ast.comments.JavadocComment;
 import japa.parser.ast.comments.LineComment;
-import japa.parser.ast.expr.AnnotationExpr;
-import japa.parser.ast.expr.ArrayAccessExpr;
-import japa.parser.ast.expr.ArrayCreationExpr;
-import japa.parser.ast.expr.ArrayInitializerExpr;
-import japa.parser.ast.expr.AssignExpr;
-import japa.parser.ast.expr.BinaryExpr;
-import japa.parser.ast.expr.BooleanLiteralExpr;
-import japa.parser.ast.expr.CastExpr;
-import japa.parser.ast.expr.CharLiteralExpr;
-import japa.parser.ast.expr.ClassExpr;
-import japa.parser.ast.expr.ConditionalExpr;
-import japa.parser.ast.expr.DoubleLiteralExpr;
-import japa.parser.ast.expr.EnclosedExpr;
-import japa.parser.ast.expr.Expression;
-import japa.parser.ast.expr.FieldAccessExpr;
-import japa.parser.ast.expr.InstanceOfExpr;
-import japa.parser.ast.expr.IntegerLiteralExpr;
-import japa.parser.ast.expr.IntegerLiteralMinValueExpr;
-import japa.parser.ast.expr.LongLiteralExpr;
-import japa.parser.ast.expr.LongLiteralMinValueExpr;
-import japa.parser.ast.expr.MarkerAnnotationExpr;
-import japa.parser.ast.expr.MemberValuePair;
-import japa.parser.ast.expr.MethodCallExpr;
-import japa.parser.ast.expr.NameExpr;
-import japa.parser.ast.expr.NormalAnnotationExpr;
-import japa.parser.ast.expr.NullLiteralExpr;
-import japa.parser.ast.expr.ObjectCreationExpr;
-import japa.parser.ast.expr.QualifiedNameExpr;
-import japa.parser.ast.expr.SingleMemberAnnotationExpr;
-import japa.parser.ast.expr.StringLiteralExpr;
-import japa.parser.ast.expr.SuperExpr;
-import japa.parser.ast.expr.ThisExpr;
-import japa.parser.ast.expr.UnaryExpr;
-import japa.parser.ast.expr.VariableDeclarationExpr;
+import japa.parser.ast.expr.*;
 import japa.parser.ast.stmt.AssertStmt;
 import japa.parser.ast.stmt.BlockStmt;
 import japa.parser.ast.stmt.BreakStmt;
@@ -1466,7 +1433,22 @@ public final class DumpVisitor implements VoidVisitor<Object> {
 		n.getValue().accept(this, arg);
 	}
 
-	@Override public void visit(final LineComment n, final Object arg) {
+    @Override
+    public void visit(LambdaExpr n, Object arg) {
+        printJavaComment(n.getComment(), arg);
+        printer.print("(");
+        for (int i=0;i<n.getParameters().size();i++){
+            if (i>0) {
+                printer.print(", ");
+            }
+            n.getParameters().get(i).accept(this, arg);
+        }
+        printer.print(") -> ");
+        printer.print(" = ");
+        n.getBody().accept(this, arg);
+    }
+
+    @Override public void visit(final LineComment n, final Object arg) {
 		if (!this.printComments) {
             return;
         }

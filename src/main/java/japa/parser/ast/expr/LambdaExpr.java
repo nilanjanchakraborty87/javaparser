@@ -68,46 +68,5 @@ public final class LambdaExpr extends Expression {
 		v.visit(this, arg);
 	}
 
-	public List<Expression> getArgs() {
-		return args;
-	}
 
-	public String getName() {
-		return name.getName();
-	}
-
-	public NameExpr getNameExpr() {
-		return name;
-	}
-
-	public Expression getScope() {
-		return scope;
-	}
-
-	public List<Type> getTypeArgs() {
-		return typeArgs;
-	}
-
-	public void setArgs(final List<Expression> args) {
-		this.args = args;
-		setAsParentNodeOf(this.args);
-	}
-
-	public void setName(final String name) {
-		this.name = new NameExpr(name);
-	}
-
-	public void setNameExpr(NameExpr name) {
-		this.name = name;
-	}
-
-	public void setScope(final Expression scope) {
-		this.scope = scope;
-		setAsParentNodeOf(this.scope);
-	}
-
-	public void setTypeArgs(final List<Type> typeArgs) {
-		this.typeArgs = typeArgs;
-		setAsParentNodeOf(this.typeArgs);
-	}
 }

@@ -269,6 +269,12 @@ public class PositionTestVisitor extends VoidVisitorAdapter<Object> {
         super.visit(n, arg);
     }
 
+    @Override
+    public void visit(final LambdaExpr n, final Object arg) {
+        doTest(n);
+        super.visit(n, arg);
+    }
+
     @Override public void visit(final MethodCallExpr n, final Object arg) {
         doTest(n);
         super.visit(n, arg);
