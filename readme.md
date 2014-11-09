@@ -1,4 +1,4 @@
-# Java 1.7 parser and Abstract Syntax Tree.
+# Java 1.8 parser and Abstract Syntax Tree.
 [![Build Status](https://drone.io/github.com/matozoid/javaparser/status.png)](https://drone.io/github.com/matozoid/javaparser)
 
 Copyright (C) 2007 J&uacute;lio Vilmar Gesser
@@ -16,7 +16,7 @@ Copyright (C) 2007 J&uacute;lio Vilmar Gesser
 	You should have received a copy of the GNU Lesser General Public License
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-This package contains a Java 1.7 Parser with AST generation and visitor support. 
+This package contains a Java 1.8 Parser with AST generation and visitor support. 
 The AST records the source code structure, javadoc and comments.
 
 ## Use JavaParser in my Maven-based project
