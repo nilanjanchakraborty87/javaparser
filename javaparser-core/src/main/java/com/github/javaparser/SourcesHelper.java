@@ -19,18 +19,13 @@ public class SourcesHelper {
     }
 
     static InputStream stringToStream(String s, String encoding) throws UnsupportedEncodingException {
-        InputStream in = new ByteArrayInputStream(s.getBytes(encoding));
-        return in;
-    }
-
-    static InputStream stringToStream(String s) {
-        InputStream in = new ByteArrayInputStream(s.getBytes());
-        return in;
+        byte[] rawData = encoding != null ? s.getBytes(encoding) : s.getBytes();
+        return new ByteArrayInputStream(rawData);
     }
 
     static String readerToString(Reader reader) throws IOException {
         char[] arr = new char[8*1024]; // 8K at a time
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         int numChars;
 
         while ((numChars = reader.read(arr, 0, arr.length)) > 0) {
