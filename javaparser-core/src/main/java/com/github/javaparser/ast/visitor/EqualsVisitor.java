@@ -21,13 +21,9 @@
  */
 package com.github.javaparser.ast.visitor;
 
+import com.github.javaparser.ast.*;
 import com.github.javaparser.ast.comments.BlockComment;
-import com.github.javaparser.ast.CompilationUnit;
-import com.github.javaparser.ast.ImportDeclaration;
 import com.github.javaparser.ast.comments.LineComment;
-import com.github.javaparser.ast.Node;
-import com.github.javaparser.ast.PackageDeclaration;
-import com.github.javaparser.ast.TypeParameter;
 import com.github.javaparser.ast.body.AnnotationDeclaration;
 import com.github.javaparser.ast.body.AnnotationMemberDeclaration;
 import com.github.javaparser.ast.body.BaseParameter;
@@ -1461,4 +1457,10 @@ public class EqualsVisitor implements GenericVisitor<Boolean, Node> {
         }
         return Boolean.TRUE;
     }
+
+	@Override
+	public Boolean visit(Identifier n, Node arg) {
+		Identifier n2 = (Identifier) arg;
+		return n.getLabel().equals(n2.getLabel());
+	}
 }

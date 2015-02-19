@@ -4,14 +4,10 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.github.javaparser.ast.*;
 import com.github.javaparser.ast.comments.BlockComment;
 import com.github.javaparser.ast.comments.Comment;
-import com.github.javaparser.ast.CompilationUnit;
-import com.github.javaparser.ast.ImportDeclaration;
 import com.github.javaparser.ast.comments.LineComment;
-import com.github.javaparser.ast.Node;
-import com.github.javaparser.ast.PackageDeclaration;
-import com.github.javaparser.ast.TypeParameter;
 import com.github.javaparser.ast.body.AnnotationDeclaration;
 import com.github.javaparser.ast.body.AnnotationMemberDeclaration;
 import com.github.javaparser.ast.body.BodyDeclaration;
@@ -1153,6 +1149,15 @@ public class CloneVisitor implements GenericVisitor<Node, Object> {
 
 		TypeExpr r = new TypeExpr(n.getBeginLine(), n.getBeginColumn(),
 				n.getEndLine(), n.getEndColumn(), t);
+
+		return r;
+	}
+
+	@Override
+	public Node visit(Identifier n, Object arg) {
+
+		Identifier r = new Identifier(n.getBeginLine(), n.getBeginColumn(),
+				n.getEndLine(), n.getEndColumn(), n.getLabel());
 
 		return r;
 	}

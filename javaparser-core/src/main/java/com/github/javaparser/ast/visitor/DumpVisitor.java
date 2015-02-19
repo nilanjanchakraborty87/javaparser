@@ -22,11 +22,8 @@
 package com.github.javaparser.ast.visitor;
 
 import static com.github.javaparser.PositionUtils.sortByBeginPosition;
-import com.github.javaparser.ast.CompilationUnit;
-import com.github.javaparser.ast.ImportDeclaration;
-import com.github.javaparser.ast.Node;
-import com.github.javaparser.ast.PackageDeclaration;
-import com.github.javaparser.ast.TypeParameter;
+
+import com.github.javaparser.ast.*;
 import com.github.javaparser.ast.body.AnnotationDeclaration;
 import com.github.javaparser.ast.body.AnnotationMemberDeclaration;
 import com.github.javaparser.ast.body.BodyDeclaration;
@@ -1607,6 +1604,12 @@ public final class DumpVisitor implements VoidVisitor<Object> {
             n.getType().accept(this, arg);
         }
     }
+
+	@Override
+	public void visit(Identifier n, Object arg) {
+		printJavaComment(n.getComment(), arg);
+		printer.print(n.getLabel());
+	}
 
     private void printOrphanCommentsBeforeThisChildNode(final Node node){
         if (node instanceof Comment) return;

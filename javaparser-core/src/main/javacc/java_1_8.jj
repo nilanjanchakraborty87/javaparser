@@ -3291,14 +3291,25 @@ BodyDeclaration AnnotationBodyDeclaration():
   { return ret; }
 }
 
+Identifier Identifier():
+{
+    String label;
+}
+{
+    <IDENTIFIER>
+    {
+        return new Identifier(token.beginLine, token.beginColumn, token.endLine, token.endColumn, token.image);
+    }
+}
+
 AnnotationMemberDeclaration AnnotationTypeMemberDeclaration(Modifier modifier):
 {
 	Type type;
-	String name;
+	Identifier name;
 	Expression defaultVal = null;
 }
 {
-  type = Type() <IDENTIFIER> { name = token.image; } "(" ")" [ defaultVal = DefaultValue() ] ";"
+  type = Type() name = Identifier() "(" ")" [ defaultVal = DefaultValue() ] ";"
 
   {
     int line = modifier.beginLine;

@@ -22,6 +22,7 @@
 package com.github.javaparser.ast.body;
 
 import com.github.javaparser.ast.DocumentableNode;
+import com.github.javaparser.ast.Identifier;
 import com.github.javaparser.ast.NamedNode;
 import com.github.javaparser.ast.comments.JavadocComment;
 import com.github.javaparser.ast.expr.AnnotationExpr;
@@ -41,21 +42,21 @@ public final class AnnotationMemberDeclaration extends BodyDeclaration implement
 
     private Type type;
 
-    private String name;
+    private Identifier name;
 
     private Expression defaultValue;
 
     public AnnotationMemberDeclaration() {
     }
 
-    public AnnotationMemberDeclaration(int modifiers, Type type, String name, Expression defaultValue) {
+    public AnnotationMemberDeclaration(int modifiers, Type type, Identifier name, Expression defaultValue) {
         setModifiers(modifiers);
         setType(type);
         setName(name);
         setDefaultValue(defaultValue);
     }
 
-    public AnnotationMemberDeclaration(int modifiers, List<AnnotationExpr> annotations, Type type, String name, Expression defaultValue) {
+    public AnnotationMemberDeclaration(int modifiers, List<AnnotationExpr> annotations, Type type, Identifier name, Expression defaultValue) {
         super(annotations);
         setModifiers(modifiers);
         setType(type);
@@ -63,7 +64,7 @@ public final class AnnotationMemberDeclaration extends BodyDeclaration implement
         setDefaultValue(defaultValue);
     }
 
-    public AnnotationMemberDeclaration(int beginLine, int beginColumn, int endLine, int endColumn, int modifiers, List<AnnotationExpr> annotations, Type type, String name, Expression defaultValue) {
+    public AnnotationMemberDeclaration(int beginLine, int beginColumn, int endLine, int endColumn, int modifiers, List<AnnotationExpr> annotations, Type type, Identifier name, Expression defaultValue) {
         super(beginLine, beginColumn, endLine, endColumn, annotations);
         setModifiers(modifiers);
         setType(type);
@@ -96,7 +97,7 @@ public final class AnnotationMemberDeclaration extends BodyDeclaration implement
     }
 
     public String getName() {
-        return name;
+        return name.getLabel();
     }
 
     public Type getType() {
@@ -112,7 +113,7 @@ public final class AnnotationMemberDeclaration extends BodyDeclaration implement
         this.modifiers = modifiers;
     }
 
-    public void setName(String name) {
+    public void setName(Identifier name) {
         this.name = name;
     }
 
