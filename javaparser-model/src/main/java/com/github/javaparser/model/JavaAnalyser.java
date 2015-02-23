@@ -12,6 +12,8 @@ import com.github.javaparser.model.report.Reporter;
 import com.github.javaparser.model.type.TypeUtils;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * @author Didier Villevalois
@@ -28,7 +30,7 @@ public class JavaAnalyser {
 		this.configuration = configuration;
 	}
 
-	public Analysis buildModel(final File sourceDirectory) {
+	public Analysis buildModel(final File sourceDirectory) throws IOException {
 		return buildModel(new DirSourcesFinder(sourceDirectory));
 	}
 
@@ -46,7 +48,7 @@ public class JavaAnalyser {
 		registry.register(new TypeUtils());
 		registry.register(new ElementUtils());
 		registry.configure();
-
+		
 		classpath.addSources(sourceDirectory);
 
 		Analysis analysis = new Analysis(configuration, registry);

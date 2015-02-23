@@ -3,6 +3,7 @@ package com.github.javaparser.model;
 import com.github.javaparser.ParseException;
 import com.github.javaparser.model.classpath.ClasspathElement;
 import com.github.javaparser.model.classpath.ResourceHelper;
+import com.github.javaparser.model.classpath.ResourcesClasspathSource;
 import com.github.javaparser.model.element.TypeElem;
 import com.github.javaparser.model.report.DumpReporter;
 import org.junit.Test;
@@ -31,7 +32,7 @@ public class BasicTest {
 						.reporter(new DumpReporter(new PrintWriter(System.out)))
 		);
 
-		Analysis model = analyser.buildModel(new File("src/test/resources/scenario_a"));
+		Analysis model = analyser.buildModel(new ResourcesClasspathSource("scenario_a"));
 
 		assertEquals(1, model.getCompilationUnits().size());
 		assertEquals(1, model.getSourcePackages().size());

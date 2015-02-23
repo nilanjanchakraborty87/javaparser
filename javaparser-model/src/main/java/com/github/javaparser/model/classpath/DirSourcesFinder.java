@@ -1,8 +1,8 @@
 package com.github.javaparser.model.classpath;
 
 import java.io.File;
-import java.util.HashSet;
-import java.util.Set;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * Retrieves ClasspathElement from a directory.
@@ -25,8 +25,8 @@ public class DirSourcesFinder implements ClasspathSource {
 		this.basePath = basePath;
 	}
 
-	@Override
-	public Set<ClasspathSource> getSubtrees() {
+	
+	private Set<ClasspathSource> getSubtreesInternal() {
 		Set<ClasspathSource> subtrees = new HashSet<ClasspathSource>();
 		for (File child : directory.listFiles()) {
 			String path = basePath.isEmpty() ? child.getName() : basePath + "/" + child.getName();
@@ -38,7 +38,17 @@ public class DirSourcesFinder implements ClasspathSource {
 	}
 
 	@Override
-	public Set<ClasspathElement> getElements() {
+	public Set<ClasspathElement> getElements() throws IOException {
+		Set<ClasspathElement> sourceFiles = new HashSet<ClasspathElement>();
+
+		sourceFiles.addAll(getElementsInternal());
+		for (ClasspathSource subtree : getSubtreesInternal()) {
+			sourceFiles.addAll(subtree.getElements());
+		}
+		return sourceFiles;
+	}
+	
+	private Set<ClasspathElement> getElementsInternal() {
 		Set<ClasspathElement> elements = new HashSet<ClasspathElement>();
 		for (File child : directory.listFiles()) {
 			String path = basePath.isEmpty() ? child.getName() : basePath + "/" + child.getName();
