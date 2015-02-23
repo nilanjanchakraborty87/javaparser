@@ -26,14 +26,6 @@ public class BasicTest {
 
 	@Test
 	public void initialTest() throws IOException, ParseException {
-
-		ResourceHelper resourceHelper = new ResourceHelper();
-		resourceHelper.ignore(Pattern.compile(".*/jre/.*"));
-
-		for (ClasspathElement element : resourceHelper.listElements("initialtest")) {
-			System.out.println(" - " + element.getPath());
-		}
-
 		JavaAnalyser analyser = new JavaAnalyser(
 				new AnalysisConfiguration()
 						.reporter(new DumpReporter(new PrintWriter(System.out)))
