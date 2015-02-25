@@ -25,6 +25,17 @@ public class TypeElem extends Elem implements TypeElement {
 	private TpeMirror superClass;
 	private List<TpeMirror> interfaces;
 
+	/**
+	 * *
+	 * @param origin
+	 * @param parentScope
+	 * @param enclosing
+	 * @param modifiers
+	 * @param qualifiedName
+	 * @param simpleName
+	 * @param kind
+	 * @param nesting
+	 */
 	public TypeElem(Origin origin,
 	                Scope parentScope,
 	                Elem enclosing,

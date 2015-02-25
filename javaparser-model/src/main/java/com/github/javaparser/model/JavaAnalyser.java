@@ -1,8 +1,10 @@
 package com.github.javaparser.model;
 
 import com.github.javaparser.model.classpath.Classpath;
+import com.github.javaparser.model.classpath.ClasspathElement;
 import com.github.javaparser.model.classpath.ClasspathSource;
 import com.github.javaparser.model.classpath.DirClasspathSource;
+import com.github.javaparser.model.compiled.ModelBuilder;
 import com.github.javaparser.model.element.ElementUtils;
 import com.github.javaparser.model.phases.Scaffolding;
 import com.github.javaparser.model.phases.SurfaceTyping1;
@@ -29,11 +31,15 @@ public class JavaAnalyser {
 		this.configuration = configuration;
 	}
 
-	public Analysis buildModel(final File sourceDirectory) throws IOException {
-		return buildModel(new DirClasspathSource(sourceDirectory));
+	public Analysis buildModelForSources(final File sourceDirectory) throws IOException {
+		return buildModelForSources(new DirClasspathSource(sourceDirectory));
 	}
 
-	public Analysis buildModel(final ClasspathSource sourceDirectory) throws IOException {
+	public ClassRegistry buildModelForClasses(final File classDirectory) throws IOException {
+		return buildModelForClasses(new DirClasspathSource(classDirectory));
+	}
+
+	public Analysis buildModelForSources(final ClasspathSource sources) throws IOException {
 		Registry registry = new Registry();
 
 		Classpath classpath = new Classpath();
@@ -48,10 +54,20 @@ public class JavaAnalyser {
 		registry.register(new ElementUtils());
 		registry.configure();
 
-		classpath.addSources(sourceDirectory);
+		classpath.addSources(sources);
 
 		Analysis analysis = new Analysis(configuration, registry);
 		analysis.proceed();
 		return analysis;
+	}
+
+	public ClassRegistry buildModelForClasses(final ClasspathSource classFiles) throws IOException {
+		ClassRegistry classRegistry = new ClassRegistry();
+		ModelBuilder modelBuilder = new ModelBuilder();
+		for (ClasspathElement aClass : classFiles.getElements()) {
+			classRegistry.record(modelBuilder.build(aClass));
+		}
+
+		return classRegistry;
 	}
 }

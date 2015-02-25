@@ -27,7 +27,7 @@ public class DummyInitialTest {
 						.reporter(new DumpReporter(new PrintWriter(System.out)))
 		);
 
-		Analysis model = analyser.buildModel(new CurrentClasspathSource("initialtest"));
+		Analysis model = analyser.buildModelForSources(new CurrentClasspathSource("initialtest"));
 		if (!model.hasErrors()) {
 			for (PackageElement packageElement : model.getSourcePackages()) {
 				dumpScanner.scan(packageElement);

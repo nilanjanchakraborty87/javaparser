@@ -28,7 +28,7 @@ public class BasicTest {
 						.reporter(new DumpReporter(new PrintWriter(System.out)))
 		);
 
-		Analysis model = analyser.buildModel(new CurrentClasspathSource("scenario_a"));
+		Analysis model = analyser.buildModelForSources(new CurrentClasspathSource("scenario_a"));
 
 		assertEquals(1, model.getCompilationUnits().size());
 		assertEquals(1, model.getSourcePackages().size());
