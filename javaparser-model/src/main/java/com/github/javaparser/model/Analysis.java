@@ -15,10 +15,7 @@ import com.github.javaparser.model.type.TypeUtils;
 
 import javax.lang.model.element.PackageElement;
 import java.io.IOException;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Queue;
 
 /**
  * @author Didier Villevalois
@@ -50,8 +47,8 @@ public class Analysis {
 	}
 
 	public void proceed() throws IOException {
-		for (ClasspathSource classpathSource : classpath.getSources()) {
-			for (ClasspathElement sourceFile : classpathSource.getElements()) {
+		for (ClasspathSource classpathEntry : classpath.getSources()) {
+			for (ClasspathElement sourceFile : classpathEntry.getElements()) {
 				try {
 					CompilationUnit cu = JavaParser.parse(sourceFile.getInputStream(),
 							configuration.getEncoding(),

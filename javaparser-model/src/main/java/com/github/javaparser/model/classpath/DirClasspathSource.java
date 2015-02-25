@@ -5,11 +5,11 @@ import java.io.IOException;
 import java.util.*;
 
 /**
- * Represent a classpath element which corresponds to a directory.
+ * Represent a classpath source which corresponds to a directory.
  *
  * @author Federico Tomassetti
  */
-public class DirSourcesFinder implements ClasspathSource {
+public class DirClasspathSource implements ClasspathSource {
     private File directory;
     private String basePath;
 
@@ -18,7 +18,7 @@ public class DirSourcesFinder implements ClasspathSource {
      * <p/>
      * All the elements contained will have a path relative to this directory.
      */
-    public DirSourcesFinder(File directory) {
+    public DirClasspathSource(File directory) {
         this(directory, "");
         if (!directory.isDirectory() || !directory.exists()) {
             throw new IllegalArgumentException("An existing directory is expected");
@@ -30,7 +30,7 @@ public class DirSourcesFinder implements ClasspathSource {
      * <p/>
      * The basePath specify the path of the directory represented by this, w.r.t. to the root of this ClasspathSource.
      */
-    private DirSourcesFinder(File directory, String basePath) {
+    private DirClasspathSource(File directory, String basePath) {
         if (!directory.exists()) {
             throw new IllegalArgumentException("No such directory: " + directory.getAbsolutePath());
         }
@@ -46,7 +46,7 @@ public class DirSourcesFinder implements ClasspathSource {
         for (File child : directory.listFiles()) {
             String path = basePath.isEmpty() ? child.getName() : basePath + "/" + child.getName();
             if (child.isDirectory()) {
-                subtrees.add(new DirSourcesFinder(child, path));
+                subtrees.add(new DirClasspathSource(child, path));
             }
         }
         return subtrees;

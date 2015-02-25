@@ -23,7 +23,7 @@ public class ResourceHelper {
 	}
 
 	/**
-	 * This resorce helper is based on the current classpath but excluded jars from
+	 * This resource helper is based on the current classpath but excluded jars from
 	 * the jre.
 	 */
 	public static ResourceHelper classpathExcludingJre() {

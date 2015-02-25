@@ -2,7 +2,7 @@ package com.github.javaparser.model;
 
 import com.github.javaparser.model.classpath.Classpath;
 import com.github.javaparser.model.classpath.ClasspathSource;
-import com.github.javaparser.model.classpath.DirSourcesFinder;
+import com.github.javaparser.model.classpath.DirClasspathSource;
 import com.github.javaparser.model.element.ElementUtils;
 import com.github.javaparser.model.phases.Scaffolding;
 import com.github.javaparser.model.phases.SurfaceTyping1;
@@ -30,7 +30,7 @@ public class JavaAnalyser {
 	}
 
 	public Analysis buildModel(final File sourceDirectory) throws IOException {
-		return buildModel(new DirSourcesFinder(sourceDirectory));
+		return buildModel(new DirClasspathSource(sourceDirectory));
 	}
 
 	public Analysis buildModel(final ClasspathSource sourceDirectory) throws IOException {

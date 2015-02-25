@@ -16,6 +16,8 @@ import javax.lang.model.element.PackageElement;
 import java.util.*;
 
 /**
+ * Represent the entire Classpath, which is composed by multiple ClasspathEntries.
+ * 
  * @author Didier Villevalois
  */
 public class Classpath {

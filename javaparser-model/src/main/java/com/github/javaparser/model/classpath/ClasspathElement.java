@@ -5,6 +5,9 @@ import java.io.InputStream;
 
 /**
  * An element on the classpath.
+ * 
+ * It represents a single file on the classpath. It could be for example a class file or a file
+ * part of the resources.
  *
  * @author Federico Tomassetti
  */

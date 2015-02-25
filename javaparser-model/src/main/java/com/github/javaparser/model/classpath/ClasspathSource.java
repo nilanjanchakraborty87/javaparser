@@ -4,8 +4,10 @@ import java.io.IOException;
 import java.util.Set;
 
 /**
- * Represent an element of the classpath, from which we can obtain
- * a list of ClasspathElements.
+ * Represent a source of ClasspathElements.
+ * 
+ * It could correspond for example to a single Classpath entry (like a jar or a directory) or it could be an aggregation
+ * of entries.
  *
  * @author Federico Tomassetti
  */

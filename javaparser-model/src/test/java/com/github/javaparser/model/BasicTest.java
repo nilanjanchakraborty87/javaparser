@@ -1,9 +1,7 @@
 package com.github.javaparser.model;
 
 import com.github.javaparser.ParseException;
-import com.github.javaparser.model.classpath.ClasspathElement;
-import com.github.javaparser.model.classpath.ResourceHelper;
-import com.github.javaparser.model.classpath.ResourcesClasspathSource;
+import com.github.javaparser.model.classpath.CurrentClasspathSource;
 import com.github.javaparser.model.element.TypeElem;
 import com.github.javaparser.model.report.DumpReporter;
 import org.junit.Test;
@@ -11,10 +9,8 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import javax.lang.model.element.Element;
-import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.regex.Pattern;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -32,7 +28,7 @@ public class BasicTest {
 						.reporter(new DumpReporter(new PrintWriter(System.out)))
 		);
 
-		Analysis model = analyser.buildModel(new ResourcesClasspathSource("scenario_a"));
+		Analysis model = analyser.buildModel(new CurrentClasspathSource("scenario_a"));
 
 		assertEquals(1, model.getCompilationUnits().size());
 		assertEquals(1, model.getSourcePackages().size());

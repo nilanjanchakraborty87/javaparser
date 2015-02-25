@@ -1,7 +1,7 @@
 package com.github.javaparser.model;
 
 import com.github.javaparser.ParseException;
-import com.github.javaparser.model.classpath.ResourcesClasspathSource;
+import com.github.javaparser.model.classpath.CurrentClasspathSource;
 import com.github.javaparser.model.report.DumpReporter;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,7 +10,6 @@ import org.junit.runners.JUnit4;
 import javax.lang.model.element.*;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementScanner8;
-import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
@@ -28,7 +27,7 @@ public class DummyInitialTest {
 						.reporter(new DumpReporter(new PrintWriter(System.out)))
 		);
 
-		Analysis model = analyser.buildModel(new ResourcesClasspathSource("initialtest"));
+		Analysis model = analyser.buildModel(new CurrentClasspathSource("initialtest"));
 		if (!model.hasErrors()) {
 			for (PackageElement packageElement : model.getSourcePackages()) {
 				dumpScanner.scan(packageElement);
