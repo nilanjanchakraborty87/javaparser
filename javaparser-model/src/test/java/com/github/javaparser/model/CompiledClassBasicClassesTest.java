@@ -18,7 +18,7 @@ import static org.junit.Assert.*;
  * @author Federico Tomassetti
  */
 @RunWith(JUnit4.class)
-public class CompiledClassBasicTest {
+public class CompiledClassBasicClassesTest {
     
     @Test
     public void foo() throws IOException {
