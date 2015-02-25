@@ -5,9 +5,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.Modifier;
 import javax.lang.model.element.NestingKind;
 import javax.lang.model.element.TypeElement;
 import java.io.IOException;
+import java.util.EnumSet;
 
 import static org.junit.Assert.*;
 
@@ -33,6 +36,12 @@ public class CompiledClassBasicTest {
         assertEquals(1, classA.getEnclosedElements().size());
         assertEquals(0, classA.getInterfaces().size());
         assertEquals(NestingKind.TOP_LEVEL, classA.getNestingKind());
+        assertTrue(classA.getSimpleName().contentEquals("A"));
+        assertNull(classA.getSuperclass());
+        assertEquals(0, classA.getTypeParameters().size());
+        assertEquals(0, classA.getAnnotationMirrors().size());
+        assertEquals(ElementKind.CLASS, classA.getKind());
+        assertEquals(EnumSet.noneOf(Modifier.class), classA.getModifiers());
 
         // class A.Test
         TypeElement classTest = classRegistry.getByName("com/github/javaparser/model/A$Test").get();
@@ -40,5 +49,11 @@ public class CompiledClassBasicTest {
         assertEquals(0, classTest.getEnclosedElements().size());
         assertEquals(0, classTest.getInterfaces().size());
         assertEquals(NestingKind.MEMBER, classTest.getNestingKind());
+        assertTrue(classTest.getSimpleName().contentEquals("Test"));
+        assertNull(classTest.getSuperclass());
+        assertEquals(0, classTest.getTypeParameters().size());
+        assertEquals(0, classTest.getAnnotationMirrors().size());
+        assertEquals(ElementKind.CLASS, classTest.getKind());
+        assertEquals(EnumSet.of(Modifier.STATIC), classTest.getModifiers());
     } 
 }

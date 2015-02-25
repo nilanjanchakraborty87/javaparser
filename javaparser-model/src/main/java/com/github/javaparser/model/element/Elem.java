@@ -9,9 +9,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import java.lang.annotation.Annotation;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Didier Villevalois
@@ -80,7 +78,7 @@ public abstract class Elem implements Element {
 
 	@Override
 	public List<? extends AnnotationMirror> getAnnotationMirrors() {
-		return null;
+		return Collections.emptyList();
 	}
 
 	@Override

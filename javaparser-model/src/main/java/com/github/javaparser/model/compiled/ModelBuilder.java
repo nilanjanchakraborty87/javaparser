@@ -19,9 +19,11 @@ import javassist.CtClass;
 import org.objectweb.asm.ClassReader;
 
 import javax.lang.model.element.*;
+import javax.lang.model.element.Modifier;
 import javax.lang.model.type.TypeMirror;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.*;
 import java.util.*;
 
 /**
@@ -148,7 +150,12 @@ public class ModelBuilder {
 
         @Override
         public List<? extends AnnotationMirror> getAnnotationMirrors() {
-            return super.getAnnotationMirrors();
+            Optional<TypeElem> solved = classRegistry.getByName(name);
+            if (solved.isPresent()) {
+                return solved.get().getAnnotationMirrors();
+            } else {
+                throw new RuntimeException("Unsolved reference to class "+name);
+            }
         }
 
         @Override
@@ -225,7 +232,7 @@ public class ModelBuilder {
         CtClass ctClass = pool.makeClass(aClass.getInputStream());
         
         ElementKind kind = ctClass.isInterface() ? ElementKind.INTERFACE : ElementKind.CLASS;
-        TypeElem typeElem = new TypeElem(origin, null, enclosing, null, absoluteName, simpleName, kind, nestingKind);
+        TypeElem typeElem = new TypeElem(origin, null, enclosing, getModifiers(ctClass), absoluteName, simpleName, kind, nestingKind);
 
         for (Elem enclosed : enclosedRegistry.get(classReader.getClassName())){
             typeElem.addEnclosedElem(enclosed);
@@ -236,8 +243,45 @@ public class ModelBuilder {
             // TODO implement
         }
         typeElem.setInterfaces(interfaces);
-
         return typeElem;
+    }
+    
+    private Set<Modifier> getModifiers(CtClass ctClass) {
+        Set<Modifier> modifiers = EnumSet.noneOf(Modifier.class);
+        if ((ctClass.getModifiers() & java.lang.reflect.Modifier.ABSTRACT) > 0){
+            modifiers.add(Modifier.ABSTRACT);
+        }
+        if ((ctClass.getModifiers() & java.lang.reflect.Modifier.FINAL) > 0){
+            modifiers.add(Modifier.FINAL);
+        }
+        if ((ctClass.getModifiers() & java.lang.reflect.Modifier.NATIVE) > 0){
+            modifiers.add(Modifier.NATIVE);
+        }
+        if ((ctClass.getModifiers() & java.lang.reflect.Modifier.PRIVATE) > 0){
+            modifiers.add(Modifier.PRIVATE);
+        }
+        if ((ctClass.getModifiers() & java.lang.reflect.Modifier.PROTECTED) > 0){
+            modifiers.add(Modifier.PROTECTED);
+        }
+        if ((ctClass.getModifiers() & java.lang.reflect.Modifier.PUBLIC) > 0){
+            modifiers.add(Modifier.PUBLIC);
+        }
+        if ((ctClass.getModifiers() & java.lang.reflect.Modifier.STATIC) > 0){
+            modifiers.add(Modifier.STATIC);
+        }
+        if ((ctClass.getModifiers() & java.lang.reflect.Modifier.STRICT) > 0){
+            modifiers.add(Modifier.STRICTFP);
+        }
+        if ((ctClass.getModifiers() & java.lang.reflect.Modifier.SYNCHRONIZED) > 0){
+            modifiers.add(Modifier.SYNCHRONIZED);
+        }
+        if ((ctClass.getModifiers() & java.lang.reflect.Modifier.TRANSIENT) > 0){
+            modifiers.add(Modifier.TRANSIENT);
+        }
+        if ((ctClass.getModifiers() & java.lang.reflect.Modifier.VOLATILE) > 0){
+            modifiers.add(Modifier.VOLATILE);
+        }
+        return modifiers;
     }
     
     private boolean isInternal(ClassReader reader) {
