@@ -93,7 +93,12 @@ public class ModelBuilder {
 
         @Override
         public NestingKind getNestingKind() {
-            return super.getNestingKind();
+            Optional<TypeElem> solved = classRegistry.getByName(name);
+            if (solved.isPresent()) {
+                return solved.get().getNestingKind();
+            } else {
+                throw new RuntimeException("Unsolved reference to class "+name);
+            }
         }
 
         @Override
@@ -113,12 +118,22 @@ public class ModelBuilder {
 
         @Override
         public List<? extends TypeMirror> getInterfaces() {
-            return super.getInterfaces();
+            Optional<TypeElem> solved = classRegistry.getByName(name);
+            if (solved.isPresent()) {
+                return solved.get().getInterfaces();
+            } else {
+                throw new RuntimeException("Unsolved reference to class "+name);
+            }
         }
 
         @Override
         public void setInterfaces(List<TpeMirror> interfaces) {
-            super.setInterfaces(interfaces);
+            Optional<TypeElem> solved = classRegistry.getByName(name);
+            if (solved.isPresent()) {
+                solved.get().setInterfaces(interfaces);
+            } else {
+                throw new RuntimeException("Unsolved reference to class "+name);
+            }
         }
 
         @Override
@@ -197,7 +212,9 @@ public class ModelBuilder {
         EltName absoluteName = internalToName(classReader.getClassName());
         
         TypeElem enclosing = null;
+        NestingKind nestingKind = NestingKind.TOP_LEVEL;
         if (isInternal(classReader)) {
+            nestingKind = NestingKind.MEMBER;
             int index = classReader.getClassName().lastIndexOf('$');
             assert index != -1;
             String enclosingName = classReader.getClassName().substring(0, index);
@@ -208,11 +225,17 @@ public class ModelBuilder {
         CtClass ctClass = pool.makeClass(aClass.getInputStream());
         
         ElementKind kind = ctClass.isInterface() ? ElementKind.INTERFACE : ElementKind.CLASS;
-        TypeElem typeElem = new TypeElem(origin, null, enclosing, null, absoluteName, simpleName, kind, null);
+        TypeElem typeElem = new TypeElem(origin, null, enclosing, null, absoluteName, simpleName, kind, nestingKind);
 
         for (Elem enclosed : enclosedRegistry.get(classReader.getClassName())){
             typeElem.addEnclosedElem(enclosed);
         }
+        
+        List<TpeMirror> interfaces = new ArrayList<TpeMirror>();
+        for (String name : classReader.getInterfaces()) {
+            // TODO implement
+        }
+        typeElem.setInterfaces(interfaces);
 
         return typeElem;
     }

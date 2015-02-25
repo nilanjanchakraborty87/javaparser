@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import javax.lang.model.element.NestingKind;
 import javax.lang.model.element.TypeElement;
 import java.io.IOException;
 
@@ -30,10 +31,14 @@ public class CompiledClassBasicTest {
         TypeElement classA = classRegistry.getByName("com/github/javaparser/model/A").get();
         assertNull(classA.getEnclosingElement());
         assertEquals(1, classA.getEnclosedElements().size());
+        assertEquals(0, classA.getInterfaces().size());
+        assertEquals(NestingKind.TOP_LEVEL, classA.getNestingKind());
 
         // class A.Test
         TypeElement classTest = classRegistry.getByName("com/github/javaparser/model/A$Test").get();
         assertTrue(classTest.getEnclosingElement().getSimpleName().contentEquals("A"));
         assertEquals(0, classTest.getEnclosedElements().size());
+        assertEquals(0, classTest.getInterfaces().size());
+        assertEquals(NestingKind.MEMBER, classTest.getNestingKind());
     } 
 }
