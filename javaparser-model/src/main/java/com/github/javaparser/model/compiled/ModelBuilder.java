@@ -12,15 +12,17 @@ import com.github.javaparser.model.scope.EltSimpleName;
 import com.github.javaparser.model.scope.Scope;
 import com.github.javaparser.model.type.TpeMirror;
 import com.google.common.base.Optional;
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
+import javassist.ClassPool;
+import javassist.CtClass;
 import org.objectweb.asm.ClassReader;
 
 import javax.lang.model.element.*;
 import javax.lang.model.type.TypeMirror;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Federico Tomassetti
@@ -28,8 +30,6 @@ import java.util.Set;
 public class ModelBuilder {
     
     private class ProxyForClassToSolve extends TypeElem {
-        
-        private List<Elem> enclosedTemp = new ArrayList<Elem>();
 
         @Override
         public Origin origin() {
@@ -70,10 +70,6 @@ public class ModelBuilder {
         public List<Elem> getEnclosedElements() {
             Optional<TypeElem> solved = classRegistry.getByName(name);
             if (solved.isPresent()) {
-                for (Elem elem : enclosedTemp) {
-                    solved.get().addEnclosedElem(elem);
-                }
-                enclosedTemp.clear();
                 return solved.get().getEnclosedElements();
             } else {
                 throw new RuntimeException("Unsolved reference to class "+name);
@@ -82,8 +78,7 @@ public class ModelBuilder {
 
         @Override
         public void addEnclosedElem(Elem elem) {
-            // given it is used a construction time we need a different approach
-            enclosedTemp.add(elem);
+           enclosedRegistry.record(this.name, elem);
         }
 
         @Override
@@ -160,18 +155,34 @@ public class ModelBuilder {
         public String toString() {
             return super.toString();
         }
-
-
+        
         private ClassRegistry classRegistry;
         private String name;
+        private EnclosedRegistry enclosedRegistry;
 
-        ProxyForClassToSolve(ClassRegistry classRegistry, String name){
+        ProxyForClassToSolve(ClassRegistry classRegistry, EnclosedRegistry enclosedRegistry, String name){
             super(null, null, null, null, null, null, null, null);
             this.classRegistry = classRegistry;
+            this.enclosedRegistry = enclosedRegistry;
             this.name = name;
         }
         
     }
+    
+    private class EnclosedRegistry {
+        private Multimap<String, Elem> enclosedBuffer = HashMultimap.create();
+        
+        public void record(String name, Elem enclosed) {
+            enclosedBuffer.put(name, enclosed);
+        }
+        
+        public Collection<Elem> get(String name){
+            return enclosedBuffer.get(name);
+            
+        }
+    }
+    
+    private EnclosedRegistry enclosedRegistry = new EnclosedRegistry();
     
     private ClassRegistry classRegistry;
     
@@ -190,10 +201,19 @@ public class ModelBuilder {
             int index = classReader.getClassName().lastIndexOf('$');
             assert index != -1;
             String enclosingName = classReader.getClassName().substring(0, index);
-            enclosing = new ProxyForClassToSolve(classRegistry, enclosingName);
+            enclosing = new ProxyForClassToSolve(classRegistry, enclosedRegistry, enclosingName);
         }
+
+        ClassPool pool = ClassPool.getDefault();
+        CtClass ctClass = pool.makeClass(aClass.getInputStream());
         
-        TypeElem typeElem = new TypeElem(origin, null, enclosing, null, absoluteName, simpleName, null, null);
+        ElementKind kind = ctClass.isInterface() ? ElementKind.INTERFACE : ElementKind.CLASS;
+        TypeElem typeElem = new TypeElem(origin, null, enclosing, null, absoluteName, simpleName, kind, null);
+
+        for (Elem enclosed : enclosedRegistry.get(classReader.getClassName())){
+            typeElem.addEnclosedElem(enclosed);
+        }
+
         return typeElem;
     }
     

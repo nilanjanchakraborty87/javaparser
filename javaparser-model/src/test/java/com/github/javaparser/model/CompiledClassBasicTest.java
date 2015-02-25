@@ -1,14 +1,13 @@
 package com.github.javaparser.model;
 
-import com.github.javaparser.model.classpath.ClasspathElement;
 import com.github.javaparser.model.classpath.CurrentClasspathSource;
-import com.github.javaparser.model.compiled.ModelBuilder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import javax.lang.model.element.TypeElement;
 import java.io.IOException;
+
 import static org.junit.Assert.*;
 
 /**
@@ -30,9 +29,11 @@ public class CompiledClassBasicTest {
         // class A
         TypeElement classA = classRegistry.getByName("com/github/javaparser/model/A").get();
         assertNull(classA.getEnclosingElement());
+        assertEquals(1, classA.getEnclosedElements().size());
 
         // class A.Test
         TypeElement classTest = classRegistry.getByName("com/github/javaparser/model/A$Test").get();
         assertTrue(classTest.getEnclosingElement().getSimpleName().contentEquals("A"));
+        assertEquals(0, classTest.getEnclosedElements().size());
     } 
 }
