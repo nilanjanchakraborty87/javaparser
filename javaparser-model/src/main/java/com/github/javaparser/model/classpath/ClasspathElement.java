@@ -11,13 +11,20 @@ import java.io.InputStream;
 public abstract class ClasspathElement {
 	private final String path;
 
-	public ClasspathElement(String path) {
+	protected ClasspathElement(String path) {
 		this.path = path;
 	}
 
+	/**
+	 * The path of the element relative to the root of the classpath.
+	 * For example a class file Foo in package a.b.c should have path a/b/c/Foo.class
+	 */
 	public final String getPath() {
 		return this.path;
 	}
 
+	/**
+	 * The content of the element.
+	 */
 	public abstract InputStream getInputStream() throws IOException;
 }
