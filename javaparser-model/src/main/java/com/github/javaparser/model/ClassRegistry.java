@@ -15,7 +15,6 @@ public class ClassRegistry {
     private List<TypeElement> classes = new ArrayList<TypeElement>();
     
     public void record(TypeElement elem) {
-        System.out.println("RECORD "+elem.getQualifiedName());
         classes.add(elem);
     }
     

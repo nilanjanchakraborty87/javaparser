@@ -14,6 +14,7 @@ import com.github.javaparser.model.scope.ScopeException;
 import com.github.javaparser.model.source.SourceOrigin;
 import com.github.javaparser.model.type.*;
 
+import javax.lang.model.type.TypeMirror;
 import java.util.*;
 
 import static com.github.javaparser.model.source.utils.NodeListUtils.visitAll;
@@ -32,8 +33,8 @@ public class TypeResolver implements Registry.Participant {
 		typeUtils = registry.get(TypeUtils.class);
 	}
 
-	public List<TpeMirror> resolveTypes(List<? extends Type> types, Scope scope) {
-		List<TpeMirror> tpeMirrors = new ArrayList<TpeMirror>();
+	public List<TypeMirror> resolveTypes(List<? extends Type> types, Scope scope) {
+		List<TypeMirror> tpeMirrors = new ArrayList<TypeMirror>();
 		if (types != null) {
 			for (Type type : types) {
 				tpeMirrors.add(resolveType(type, scope));
@@ -42,8 +43,8 @@ public class TypeResolver implements Registry.Participant {
 		return tpeMirrors;
 	}
 
-	public TpeMirror resolveType(Type type, Scope scope) {
-		TpeMirror tpeMirror = type.accept(typeResolver, scope);
+	public TypeMirror resolveType(Type type, Scope scope) {
+		TypeMirror tpeMirror = type.accept(typeResolver, scope);
 		if (tpeMirror == null) {
 			throw new ScopeException("Can't resolve type '" + type + "'", null);
 		}
@@ -67,10 +68,10 @@ public class TypeResolver implements Registry.Participant {
 
 	private TypeVisitor typeResolver = new TypeVisitor();
 
-	class TypeVisitor extends GenericVisitorAdapter<TpeMirror, Scope> {
+	class TypeVisitor extends GenericVisitorAdapter<TypeMirror, Scope> {
 
-		protected List<TpeMirror> resolveBounds(TypeParameterElem typeParameterElem, Scope scope) {
-			List<TpeMirror> boundsMirrors = typeParameterElem.getBounds();
+		protected List<TypeMirror> resolveBounds(TypeParameterElem typeParameterElem, Scope scope) {
+			List<TypeMirror> boundsMirrors = typeParameterElem.getBounds();
 			if (boundsMirrors != null) return boundsMirrors;
 			else return Collections.emptyList();
 		}
@@ -87,12 +88,12 @@ public class TypeResolver implements Registry.Participant {
 
 			TypeParameterElem typeParameterElem = arg.resolveTypeParameter(typeName);
 			if (typeParameterElem != null) {
-				List<TpeMirror> bounds = resolveBounds(typeParameterElem, arg);
+				List<TypeMirror> bounds = resolveBounds(typeParameterElem, arg);
 				if (bounds.isEmpty())
 					return new TpeVariable(typeParameterElem, typeUtils.objectType(), NullTpe.NULL);
 				else return new TpeVariable(typeParameterElem, new IntersectionTpe(bounds), NullTpe.NULL);
 			} else {
-				List<TpeMirror> tpeArgsMirrors = visitAll(this, arg, typeArgs);
+				List<TypeMirror> tpeArgsMirrors = visitAll(this, arg, typeArgs);
 
 				if (typeScope != null) {
 					DeclaredTpe typeScopeMirror = (DeclaredTpe) typeScope.accept(this, arg);
@@ -107,30 +108,30 @@ public class TypeResolver implements Registry.Participant {
 		}
 
 		@Override
-		public TpeMirror visit(ReferenceType n, Scope arg) {
+		public TypeMirror visit(ReferenceType n, Scope arg) {
 			int depth = n.getArrayCount();
 			Type type = n.getType();
-			TpeMirror tpeMirror = type.accept(this, arg);
+			TypeMirror tpeMirror = type.accept(this, arg);
 			return makeArray(tpeMirror, depth);
 		}
 
-		private TpeMirror makeArray(TpeMirror tpeMirror, int depth) {
+		private TypeMirror makeArray(TypeMirror tpeMirror, int depth) {
 			if (depth == 0) return tpeMirror;
 			else return makeArray(new ArrayTpe(tpeMirror), depth);
 		}
 
 		@Override
-		public TpeMirror visit(WildcardType n, Scope arg) {
+		public TypeMirror visit(WildcardType n, Scope arg) {
 			ReferenceType eBound = n.getExtends();
 			ReferenceType sBound = n.getSuper();
 
-			TpeMirror eBoundMirror = eBound != null ? eBound.accept(this, arg) : typeUtils.objectType();
-			TpeMirror sBoundMirror = sBound != null ? sBound.accept(this, arg) : NullTpe.NULL;
+			TypeMirror eBoundMirror = eBound != null ? eBound.accept(this, arg) : typeUtils.objectType();
+			TypeMirror sBoundMirror = sBound != null ? sBound.accept(this, arg) : NullTpe.NULL;
 			return new WildcardTpe(eBoundMirror, sBoundMirror);
 		}
 
 		@Override
-		public TpeMirror visit(PrimitiveType n, Scope arg) {
+		public TypeMirror visit(PrimitiveType n, Scope arg) {
 			switch (n.getType()) {
 				case Boolean:
 					return PrimitiveTpe.BOOLEAN;
@@ -154,7 +155,7 @@ public class TypeResolver implements Registry.Participant {
 		}
 
 		@Override
-		public TpeMirror visit(VoidType n, Scope arg) {
+		public TypeMirror visit(VoidType n, Scope arg) {
 			return NoTpe.VOID;
 		}
 	}
@@ -164,8 +165,8 @@ public class TypeResolver implements Registry.Participant {
 		Map<TypeParameterElem, Object> pendingResolution = new IdentityHashMap<TypeParameterElem, Object>();
 
 		@Override
-		public List<TpeMirror> resolveBounds(TypeParameterElem typeParameterElem, Scope scope) {
-			List<TpeMirror> boundsMirrors = typeParameterElem.getBounds();
+		public List<TypeMirror> resolveBounds(TypeParameterElem typeParameterElem, Scope scope) {
+			List<TypeMirror> boundsMirrors = typeParameterElem.getBounds();
 			if (boundsMirrors == null) {
 				SourceOrigin origin = (SourceOrigin) typeParameterElem.origin();
 				TypeParameter node = (TypeParameter) origin.getNode();

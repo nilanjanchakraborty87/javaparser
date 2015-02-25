@@ -31,17 +31,17 @@ public class TypeUtils implements Types, Registry.Participant {
 
 	public TpeMirror objectType() {
 		TypeElem objectTypeElem = elementUtils.java_lang_Object();
-		return new DeclaredTpe(NoTpe.NONE, objectTypeElem, Collections.<TpeMirror>emptyList());
+		return new DeclaredTpe(NoTpe.NONE, objectTypeElem, Collections.<TypeMirror>emptyList());
 	}
 
-	public DeclaredTpe enumTypeOf(TpeMirror tpeMirror) {
+	public DeclaredTpe enumTypeOf(TypeMirror tpeMirror) {
 		TypeElem enumTypeElem = elementUtils.java_lang_Enum();
 		return new DeclaredTpe(NoTpe.NONE, enumTypeElem, Collections.singletonList(tpeMirror));
 	}
 
 	public DeclaredTpe annotationType() {
 		TypeElem annotationTypeElem = elementUtils.java_lang_annotation_Annotation();
-		return new DeclaredTpe(NoTpe.NONE, annotationTypeElem, Collections.<TpeMirror>emptyList());
+		return new DeclaredTpe(NoTpe.NONE, annotationTypeElem, Collections.<TypeMirror>emptyList());
 	}
 
 	/* Standard API */
@@ -159,11 +159,11 @@ public class TypeUtils implements Types, Registry.Participant {
 
 	@Override
 	public DeclaredType getDeclaredType(TypeElement typeElem, TypeMirror... typeArgs) {
-		return new DeclaredTpe(NoTpe.NONE, (TypeElem) typeElem, Arrays.asList((TpeMirror[]) typeArgs));
+		return new DeclaredTpe(NoTpe.NONE, (TypeElem) typeElem, Arrays.asList((TypeMirror[]) typeArgs));
 	}
 
 	@Override
 	public DeclaredType getDeclaredType(DeclaredType containing, TypeElement typeElem, TypeMirror... typeArgs) {
-		return new DeclaredTpe((TpeMirror) containing, (TypeElem) typeElem, Arrays.asList((TpeMirror[]) typeArgs));
+		return new DeclaredTpe((TpeMirror) containing, (TypeElem) typeElem, Arrays.asList((TypeMirror[]) typeArgs));
 	}
 }

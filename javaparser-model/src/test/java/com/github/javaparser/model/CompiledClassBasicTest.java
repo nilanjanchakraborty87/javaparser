@@ -27,7 +27,12 @@ public class CompiledClassBasicTest {
         assertTrue(classRegistry.getByName("com/github/javaparser/model/A").isPresent());
         assertTrue(classRegistry.getByName("com/github/javaparser/model/A$Test").isPresent());
         
+        // class A
         TypeElement classA = classRegistry.getByName("com/github/javaparser/model/A").get();
+        assertNull(classA.getEnclosingElement());
+
+        // class A.Test
         TypeElement classTest = classRegistry.getByName("com/github/javaparser/model/A$Test").get();
+        assertTrue(classTest.getEnclosingElement().getSimpleName().contentEquals("A"));
     } 
 }

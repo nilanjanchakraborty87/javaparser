@@ -63,7 +63,7 @@ public class JavaAnalyser {
 
 	public ClassRegistry buildModelForClasses(final ClasspathSource classFiles) throws IOException {
 		ClassRegistry classRegistry = new ClassRegistry();
-		ModelBuilder modelBuilder = new ModelBuilder();
+		ModelBuilder modelBuilder = new ModelBuilder(classRegistry);
 		for (ClasspathElement aClass : classFiles.getElements()) {
 			classRegistry.record(modelBuilder.build(aClass));
 		}

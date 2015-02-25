@@ -8,6 +8,7 @@ import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
+import javax.lang.model.type.TypeMirror;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,13 +21,13 @@ public abstract class Elem implements Element {
 
 	private final Origin origin;
 	private final Scope parentScope;
-	private final Elem enclosing;
+	private final Element enclosing;
 	private final Set<Modifier> modifiers;
 	private final EltSimpleName simpleName;
 	private final ElementKind kind;
-	protected final List<Elem> enclosed = new ArrayList<Elem>();
+	protected final List<Element> enclosed = new ArrayList<Element>();
 
-	public Elem(Origin origin, Scope parentScope, Elem enclosing, Set<Modifier> modifiers, EltSimpleName simpleName, ElementKind kind) {
+	public Elem(Origin origin, Scope parentScope, Element enclosing, Set<Modifier> modifiers, EltSimpleName simpleName, ElementKind kind) {
 		this.origin = origin;
 		this.parentScope = parentScope;
 		this.enclosing = enclosing;
@@ -34,7 +35,10 @@ public abstract class Elem implements Element {
 		this.simpleName = simpleName;
 		this.kind = kind;
 
-		if (this.enclosing != null) this.enclosing.addEnclosedElem(this);
+		
+		if (this.enclosing != null && (this.enclosing instanceof Elem)) {
+			((Elem)this.enclosing).addEnclosedElem(this);
+		}
 	}
 
 	public final Origin origin() {
@@ -51,7 +55,7 @@ public abstract class Elem implements Element {
 	}
 
 	@Override
-	public final Elem getEnclosingElement() {
+	public final Element getEnclosingElement() {
 		return enclosing;
 	}
 
@@ -71,12 +75,12 @@ public abstract class Elem implements Element {
 	}
 
 	@Override
-	public final List<Elem> getEnclosedElements() {
+	public final List<Element> getEnclosedElements() {
 		return enclosed;
 	}
 
 	@Override
-	public abstract TpeMirror asType();
+	public abstract TypeMirror asType();
 
 	@Override
 	public List<? extends AnnotationMirror> getAnnotationMirrors() {

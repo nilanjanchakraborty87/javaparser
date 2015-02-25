@@ -25,10 +25,10 @@ public abstract class TpeMirror implements TypeMirror {
 		return null;
 	}
 
-	protected static String allToString(List<? extends TpeMirror> types, String separator) {
+	protected static String allToString(List<? extends TypeMirror> types, String separator) {
 		StringBuffer buffer = new StringBuffer();
 		boolean first = true;
-		for (TpeMirror type : types) {
+		for (TypeMirror type : types) {
 			if (!first) buffer.append(separator);
 			else first = false;
 			buffer.append(type.toString());
@@ -36,7 +36,7 @@ public abstract class TpeMirror implements TypeMirror {
 		return buffer.toString();
 	}
 
-	protected static String allToString(List<? extends TpeMirror> types) {
+	protected static String allToString(List<? extends TypeMirror> types) {
 		return allToString(types, ",");
 	}
 }
