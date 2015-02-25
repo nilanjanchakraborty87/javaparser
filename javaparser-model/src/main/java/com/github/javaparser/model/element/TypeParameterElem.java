@@ -5,7 +5,6 @@ import com.github.javaparser.model.scope.Scope;
 import com.github.javaparser.model.type.TpeMirror;
 
 import javax.lang.model.element.*;
-import javax.lang.model.type.TypeMirror;
 import java.util.EnumSet;
 import java.util.List;
 
@@ -14,7 +13,7 @@ import java.util.List;
  */
 public class TypeParameterElem extends Elem implements TypeParameterElement {
 
-	private List<TypeMirror> bounds;
+	private List<TpeMirror> bounds;
 
 	public TypeParameterElem(Origin origin,
 	                         Elem enclosing,
@@ -38,11 +37,11 @@ public class TypeParameterElem extends Elem implements TypeParameterElement {
 	}
 
 	@Override
-	public List<TypeMirror> getBounds() {
+	public List<TpeMirror> getBounds() {
 		return bounds;
 	}
 
-	public void setBounds(List<TypeMirror> bounds) {
+	public void setBounds(List<TpeMirror> bounds) {
 		this.bounds = bounds;
 	}
 

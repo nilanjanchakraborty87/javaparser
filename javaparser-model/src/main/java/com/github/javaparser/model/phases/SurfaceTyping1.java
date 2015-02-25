@@ -19,7 +19,6 @@ import com.github.javaparser.model.type.NoTpe;
 import com.github.javaparser.model.type.TpeMirror;
 import com.github.javaparser.model.type.TypeUtils;
 
-import javax.lang.model.type.TypeMirror;
 import java.util.Collections;
 import java.util.List;
 
@@ -115,7 +114,7 @@ public class SurfaceTyping1 implements Registry.Participant {
 			TypeElem elem = attr.element();
 
 			elem.setSuperClass(NoTpe.NONE);
-			elem.setInterfaces(Collections.<TypeMirror>singletonList(typeUtils.annotationType()));
+			elem.setInterfaces(Collections.<TpeMirror>singletonList(typeUtils.annotationType()));
 
 			super.visit(n, arg);
 		}
@@ -132,11 +131,11 @@ public class SurfaceTyping1 implements Registry.Participant {
 				switch (tpeMirror.asElement().getKind()) {
 					case INTERFACE:
 						elem.setSuperClass(typeUtils.objectType());
-						elem.setInterfaces(Collections.<TypeMirror>singletonList(tpeMirror));
+						elem.setInterfaces(Collections.<TpeMirror>singletonList(tpeMirror));
 						break;
 					case CLASS:
 						elem.setSuperClass(tpeMirror);
-						elem.setInterfaces(Collections.<TypeMirror>emptyList());
+						elem.setInterfaces(Collections.<TpeMirror>emptyList());
 						break;
 					default:
 						throw new IllegalStateException();

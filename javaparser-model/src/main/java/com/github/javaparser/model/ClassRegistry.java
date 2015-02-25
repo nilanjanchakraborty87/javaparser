@@ -12,9 +12,9 @@ import java.util.List;
  */
 public class ClassRegistry {
     
-    private List<TypeElement> classes = new ArrayList<TypeElement>();
+    private List<TypeElem> classes = new ArrayList<TypeElem>();
     
-    public void record(TypeElement elem) {
+    public void record(TypeElem elem) {
         classes.add(elem);
     }
     
@@ -22,8 +22,8 @@ public class ClassRegistry {
         return classes.size();
     }
     
-    public Optional<TypeElement> getByName(String name){
-        for (TypeElement element : classes) {
+    public Optional<TypeElem> getByName(String name){
+        for (TypeElem element : classes) {
             if (element.getQualifiedName().contentEquals(name)){
                 return Optional.of(element);
             }

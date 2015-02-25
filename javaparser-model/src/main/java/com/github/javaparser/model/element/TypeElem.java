@@ -22,23 +22,12 @@ public class TypeElem extends Elem implements TypeElement {
 	private final Map<EltSimpleName, TypeElem> types = new HashMap<EltSimpleName, TypeElem>();
 	private final Map<EltSimpleName, ExecutableElem> executables = new HashMap<EltSimpleName, ExecutableElem>();
 	private final Map<EltSimpleName, VariableElem> variables = new HashMap<EltSimpleName, VariableElem>();
-	private TypeMirror superClass;
-	private List<TypeMirror> interfaces;
+	private TpeMirror superClass;
+	private List<TpeMirror> interfaces;
 
-	/**
-	 * *
-	 * @param origin
-	 * @param parentScope
-	 * @param enclosing
-	 * @param modifiers
-	 * @param qualifiedName
-	 * @param simpleName
-	 * @param kind
-	 * @param nesting
-	 */
 	public TypeElem(Origin origin,
 	                Scope parentScope,
-	                Element enclosing,
+	                Elem enclosing,
 	                Set<Modifier> modifiers,
 	                EltName qualifiedName,
 	                EltSimpleName simpleName,
@@ -50,7 +39,7 @@ public class TypeElem extends Elem implements TypeElement {
 	}
 
 	@Override
-	protected void addEnclosedElem(Elem elem) {
+	public void addEnclosedElem(Elem elem) {
 		EltSimpleName name = elem.getSimpleName();
 		if (name.isEmpty()) return;
 
@@ -82,17 +71,17 @@ public class TypeElem extends Elem implements TypeElement {
 	}
 
 	@Override
-	public final EltName getQualifiedName() {
+	public EltName getQualifiedName() {
 		return qualifiedName;
 	}
 
 	@Override
-	public final NestingKind getNestingKind() {
+	public NestingKind getNestingKind() {
 		return nesting;
 	}
 
 	@Override
-	public final List<TypeParameterElem> getTypeParameters() {
+	public List<TypeParameterElem> getTypeParameters() {
 		return typeParameters;
 	}
 
@@ -101,7 +90,7 @@ public class TypeElem extends Elem implements TypeElement {
 		return superClass;
 	}
 
-	public void setSuperClass(TypeMirror superClass) {
+	public void setSuperClass(TpeMirror superClass) {
 		this.superClass = superClass;
 	}
 
@@ -110,7 +99,7 @@ public class TypeElem extends Elem implements TypeElement {
 		return interfaces;
 	}
 
-	public void setInterfaces(List<TypeMirror> interfaces) {
+	public void setInterfaces(List<TpeMirror> interfaces) {
 		this.interfaces = interfaces;
 	}
 
@@ -120,8 +109,8 @@ public class TypeElem extends Elem implements TypeElement {
 	}
 
 	@Override
-	public TypeMirror asType() {
-		List<TypeMirror> typeParametersAsTypes = new ArrayList<TypeMirror>();
+	public TpeMirror asType() {
+		List<TpeMirror> typeParametersAsTypes = new ArrayList<TpeMirror>();
 		for (TypeParameterElem typeParameter : typeParameters) {
 			typeParametersAsTypes.add(typeParameter.asType());
 		}
@@ -151,7 +140,7 @@ public class TypeElem extends Elem implements TypeElement {
 				typeElem = ((DeclaredTpe) superClass).asElement().scope().resolveLocalType(name);
 			}
 			if (typeElem == null && interfaces != null && !interfaces.isEmpty()) {
-				for (TypeMirror anInterface : interfaces) {
+				for (TpeMirror anInterface : interfaces) {
 					if (anInterface instanceof DeclaredTpe) {
 						typeElem = ((DeclaredTpe) anInterface).asElement().scope().resolveLocalType(name);
 						if (typeElem != null) break;
@@ -168,7 +157,7 @@ public class TypeElem extends Elem implements TypeElement {
 				variableElem = ((DeclaredTpe) superClass).asElement().scope().resolveLocalVariable(name);
 			}
 			if (variableElem == null && interfaces != null && !interfaces.isEmpty()) {
-				for (TypeMirror anInterface : interfaces) {
+				for (TpeMirror anInterface : interfaces) {
 					if (anInterface instanceof DeclaredTpe) {
 						variableElem = ((DeclaredTpe) anInterface).asElement().scope().resolveLocalVariable(name);
 						if (variableElem != null) break;
@@ -185,7 +174,7 @@ public class TypeElem extends Elem implements TypeElement {
 				executableElem = ((DeclaredTpe) superClass).asElement().scope().resolveLocalExecutable(name);
 			}
 			if (executableElem == null && interfaces != null && !interfaces.isEmpty()) {
-				for (TypeMirror anInterface : interfaces) {
+				for (TpeMirror anInterface : interfaces) {
 					if (anInterface instanceof DeclaredTpe) {
 						executableElem = ((DeclaredTpe) anInterface).asElement().scope().resolveLocalExecutable(name);
 						if (executableElem != null) break;
@@ -198,10 +187,6 @@ public class TypeElem extends Elem implements TypeElement {
 
 	@Override
 	public String toString() {
-		return "TypeElem{" +
-				"qualifiedName=" + qualifiedName +
-				", nesting=" + nesting +
-				", superClass=" + superClass +
-				'}';
+		return getKind() + " '" + getQualifiedName() + "'";
 	}
 }

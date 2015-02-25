@@ -3,10 +3,14 @@ package com.github.javaparser.model.compiled;
 import com.github.javaparser.model.ClassRegistry;
 import com.github.javaparser.model.classpath.ClasspathElement;
 import com.github.javaparser.model.element.Elem;
+import com.github.javaparser.model.element.Origin;
 import com.github.javaparser.model.element.TypeElem;
+import com.github.javaparser.model.element.TypeParameterElem;
 import com.github.javaparser.model.scope.EltName;
 import com.github.javaparser.model.scope.EltNames;
 import com.github.javaparser.model.scope.EltSimpleName;
+import com.github.javaparser.model.scope.Scope;
+import com.github.javaparser.model.type.TpeMirror;
 import com.google.common.base.Optional;
 import org.objectweb.asm.ClassReader;
 
@@ -14,7 +18,7 @@ import javax.lang.model.element.*;
 import javax.lang.model.type.TypeMirror;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -23,26 +27,33 @@ import java.util.Set;
  */
 public class ModelBuilder {
     
-    private class ProxyForClassToSolve implements TypeElement {
+    private class ProxyForClassToSolve extends TypeElem {
+        
+        private List<Elem> enclosedTemp = new ArrayList<Elem>();
 
         @Override
-        public List<? extends Element> getEnclosedElements() {
-            return null;
+        public Origin origin() {
+            return super.origin();
         }
 
         @Override
-        public NestingKind getNestingKind() {
-            throw new UnsupportedOperationException();
+        public Scope parentScope() {
+            return super.parentScope();
         }
 
         @Override
-        public Name getQualifiedName() {
-            throw new UnsupportedOperationException();
+        public Elem getEnclosingElement() {
+            return super.getEnclosingElement();
         }
 
         @Override
-        public Name getSimpleName() {
-            Optional<TypeElement> solved = classRegistry.getByName(name);
+        public Set<Modifier> getModifiers() {
+            return super.getModifiers();
+        }
+
+        @Override
+        public EltSimpleName getSimpleName() {
+            Optional<TypeElem> solved = classRegistry.getByName(name);
             if (solved.isPresent()) {
                 return solved.get().getSimpleName();
             } else {
@@ -51,64 +62,111 @@ public class ModelBuilder {
         }
 
         @Override
+        public ElementKind getKind() {
+            return super.getKind();
+        }
+
+        @Override
+        public List<Elem> getEnclosedElements() {
+            Optional<TypeElem> solved = classRegistry.getByName(name);
+            if (solved.isPresent()) {
+                for (Elem elem : enclosedTemp) {
+                    solved.get().addEnclosedElem(elem);
+                }
+                enclosedTemp.clear();
+                return solved.get().getEnclosedElements();
+            } else {
+                throw new RuntimeException("Unsolved reference to class "+name);
+            }
+        }
+
+        @Override
+        public void addEnclosedElem(Elem elem) {
+            // given it is used a construction time we need a different approach
+            enclosedTemp.add(elem);
+        }
+
+        @Override
+        public EltName getQualifiedName() {
+            Optional<TypeElem> solved = classRegistry.getByName(name);
+            if (solved.isPresent()) {
+                return solved.get().getQualifiedName();
+            } else {
+                throw new RuntimeException("Unsolved reference to class "+name);
+            }
+        }
+
+        @Override
+        public NestingKind getNestingKind() {
+            return super.getNestingKind();
+        }
+
+        @Override
+        public List<TypeParameterElem> getTypeParameters() {
+            return super.getTypeParameters();
+        }
+
+        @Override
         public TypeMirror getSuperclass() {
-            throw new UnsupportedOperationException();
+            return super.getSuperclass();
+        }
+
+        @Override
+        public void setSuperClass(TpeMirror superClass) {
+            super.setSuperClass(superClass);
         }
 
         @Override
         public List<? extends TypeMirror> getInterfaces() {
-            throw new UnsupportedOperationException();
+            return super.getInterfaces();
         }
 
         @Override
-        public List<? extends TypeParameterElement> getTypeParameters() {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public Element getEnclosingElement() {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public TypeMirror asType() {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public ElementKind getKind() {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public Set<Modifier> getModifiers() {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public List<? extends AnnotationMirror> getAnnotationMirrors() {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public <A extends Annotation> A getAnnotation(Class<A> annotationType) {
-            throw new UnsupportedOperationException();
+        public void setInterfaces(List<TpeMirror> interfaces) {
+            super.setInterfaces(interfaces);
         }
 
         @Override
         public <R, P> R accept(ElementVisitor<R, P> v, P p) {
-            throw new UnsupportedOperationException();
+            return super.accept(v, p);
+        }
+
+        @Override
+        public TpeMirror asType() {
+            return super.asType();
+        }
+
+        @Override
+        public List<? extends AnnotationMirror> getAnnotationMirrors() {
+            return super.getAnnotationMirrors();
+        }
+
+        @Override
+        public <A extends Annotation> A getAnnotation(Class<A> annotationType) {
+            return super.getAnnotation(annotationType);
         }
 
         @Override
         public <A extends Annotation> A[] getAnnotationsByType(Class<A> annotationType) {
-            throw new UnsupportedOperationException();
+            return super.getAnnotationsByType(annotationType);
         }
-        
+
+        @Override
+        public Scope scope() {
+            return super.scope();
+        }
+
+        @Override
+        public String toString() {
+            return super.toString();
+        }
+
+
         private ClassRegistry classRegistry;
         private String name;
 
         ProxyForClassToSolve(ClassRegistry classRegistry, String name){
+            super(null, null, null, null, null, null, null, null);
             this.classRegistry = classRegistry;
             this.name = name;
         }
@@ -121,13 +179,13 @@ public class ModelBuilder {
         this.classRegistry = classRegistry;
     }
     
-    public TypeElement build(ClasspathElement aClass) throws IOException {
+    public TypeElem build(ClasspathElement aClass) throws IOException {
         ClassReader classReader = new ClassReader(aClass.getInputStream());
         CompiledClassOrigin origin = new CompiledClassOrigin();
         EltSimpleName simpleName = internalToSimple(classReader.getClassName());
         EltName absoluteName = internalToName(classReader.getClassName());
         
-        Element enclosing = null;
+        TypeElem enclosing = null;
         if (isInternal(classReader)) {
             int index = classReader.getClassName().lastIndexOf('$');
             assert index != -1;
@@ -135,7 +193,7 @@ public class ModelBuilder {
             enclosing = new ProxyForClassToSolve(classRegistry, enclosingName);
         }
         
-            TypeElem typeElem = new TypeElem(origin, null, enclosing, null, absoluteName, simpleName, null, null);
+        TypeElem typeElem = new TypeElem(origin, null, enclosing, null, absoluteName, simpleName, null, null);
         return typeElem;
     }
     

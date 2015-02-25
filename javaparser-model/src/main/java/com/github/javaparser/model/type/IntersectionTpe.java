@@ -11,9 +11,9 @@ import java.util.List;
  */
 public class IntersectionTpe extends TpeMirror implements IntersectionType {
 
-	private final List<TypeMirror> bounds;
+	private final List<TpeMirror> bounds;
 
-	public IntersectionTpe(List<TypeMirror> bounds) {
+	public IntersectionTpe(List<TpeMirror> bounds) {
 		this.bounds = bounds;
 	}
 

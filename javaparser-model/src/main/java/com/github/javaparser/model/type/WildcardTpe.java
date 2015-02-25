@@ -10,10 +10,10 @@ import javax.lang.model.type.WildcardType;
  */
 public class WildcardTpe extends TpeMirror implements WildcardType {
 
-	private final TypeMirror extendsBound;
-	private final TypeMirror superBound;
+	private final TpeMirror extendsBound;
+	private final TpeMirror superBound;
 
-	public WildcardTpe(TypeMirror extendsBound, TypeMirror superBound) {
+	public WildcardTpe(TpeMirror extendsBound, TpeMirror superBound) {
 		this.extendsBound = extendsBound;
 		this.superBound = superBound;
 	}

@@ -13,13 +13,13 @@ import java.util.List;
  */
 public class DeclaredTpe extends TpeMirror implements DeclaredType {
 
-	private final TypeMirror enclosingType;
+	private final TpeMirror enclosingType;
 	private final TypeElem element;
-	private final List<TypeMirror> typeArguments;
+	private final List<TpeMirror> typeArguments;
 
-	public DeclaredTpe(TypeMirror enclosingType,
+	public DeclaredTpe(TpeMirror enclosingType,
 	                   TypeElem element,
-	                   List<TypeMirror> typeArguments) {
+	                   List<TpeMirror> typeArguments) {
 		this.enclosingType = enclosingType;
 		this.element = element;
 		this.typeArguments = typeArguments;

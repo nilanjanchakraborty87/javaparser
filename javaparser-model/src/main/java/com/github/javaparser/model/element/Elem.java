@@ -8,7 +8,6 @@ import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
-import javax.lang.model.type.TypeMirror;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,13 +20,13 @@ public abstract class Elem implements Element {
 
 	private final Origin origin;
 	private final Scope parentScope;
-	private final Element enclosing;
+	private final Elem enclosing;
 	private final Set<Modifier> modifiers;
 	private final EltSimpleName simpleName;
 	private final ElementKind kind;
-	protected final List<Element> enclosed = new ArrayList<Element>();
+	protected final List<Elem> enclosed = new ArrayList<Elem>();
 
-	public Elem(Origin origin, Scope parentScope, Element enclosing, Set<Modifier> modifiers, EltSimpleName simpleName, ElementKind kind) {
+	public Elem(Origin origin, Scope parentScope, Elem enclosing, Set<Modifier> modifiers, EltSimpleName simpleName, ElementKind kind) {
 		this.origin = origin;
 		this.parentScope = parentScope;
 		this.enclosing = enclosing;
@@ -35,17 +34,14 @@ public abstract class Elem implements Element {
 		this.simpleName = simpleName;
 		this.kind = kind;
 
-		
-		if (this.enclosing != null && (this.enclosing instanceof Elem)) {
-			((Elem)this.enclosing).addEnclosedElem(this);
-		}
+		if (this.enclosing != null) this.enclosing.addEnclosedElem(this);
 	}
 
-	public final Origin origin() {
+	public Origin origin() {
 		return origin;
 	}
 
-	public final Scope parentScope() {
+	public Scope parentScope() {
 		return parentScope;
 	}
 
@@ -55,32 +51,32 @@ public abstract class Elem implements Element {
 	}
 
 	@Override
-	public final Element getEnclosingElement() {
+	public Elem getEnclosingElement() {
 		return enclosing;
 	}
 
 	@Override
-	public final Set<Modifier> getModifiers() {
+	public Set<Modifier> getModifiers() {
 		return modifiers;
 	}
 
 	@Override
-	public final EltSimpleName getSimpleName() {
+	public EltSimpleName getSimpleName() {
 		return simpleName;
 	}
 
 	@Override
-	public final ElementKind getKind() {
+	public ElementKind getKind() {
 		return kind;
 	}
 
 	@Override
-	public final List<Element> getEnclosedElements() {
+	public List<Elem> getEnclosedElements() {
 		return enclosed;
 	}
 
 	@Override
-	public abstract TypeMirror asType();
+	public abstract TpeMirror asType();
 
 	@Override
 	public List<? extends AnnotationMirror> getAnnotationMirrors() {
