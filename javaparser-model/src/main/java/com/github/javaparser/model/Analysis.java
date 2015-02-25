@@ -49,29 +49,20 @@ public class Analysis {
 		elementUtils = registry.get(ElementUtils.class);
 	}
 
-	public void proceed() {
-		Queue<ClasspathSource> directories = new ArrayDeque<ClasspathSource>();
-		List<ClasspathElement> sourceFiles = new ArrayList<ClasspathElement>();
-
-		directories.addAll(classpath.getSources());
-		while (!directories.isEmpty()) {
-			ClasspathSource current = directories.poll();
-
-			directories.addAll(current.getSubtrees());
-			sourceFiles.addAll(current.getElements());
-		}
-
-		for (ClasspathElement sourceFile : sourceFiles) {
-			try {
-				CompilationUnit cu = JavaParser.parse(sourceFile.getInputStream(),
-						configuration.getEncoding(),
-						configuration.isConsideringComments());
-				classpath.addCompilationUnit(cu);
-				scaffolding.process(sourceFile, cu);
-			} catch (ParseException e) {
-				reporter.report(sourceFile, e);
-			} catch (IOException e) {
-				reporter.report(sourceFile, e);
+	public void proceed() throws IOException {
+		for (ClasspathSource classpathSource : classpath.getSources()) {
+			for (ClasspathElement sourceFile : classpathSource.getElements()) {
+				try {
+					CompilationUnit cu = JavaParser.parse(sourceFile.getInputStream(),
+							configuration.getEncoding(),
+							configuration.isConsideringComments());
+					classpath.addCompilationUnit(cu);
+					scaffolding.process(sourceFile, cu);
+				} catch (ParseException e) {
+					reporter.report(sourceFile, e);
+				} catch (IOException e) {
+					reporter.report(sourceFile, e);
+				}
 			}
 		}
 
