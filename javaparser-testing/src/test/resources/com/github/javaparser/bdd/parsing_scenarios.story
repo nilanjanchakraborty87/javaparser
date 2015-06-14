@@ -257,18 +257,6 @@ Then method 2 class 1 is not a default method
 Then all nodes refer to their parent
 
 
-<<<<<<< HEAD
-Scenario: A lambda expression inside a conditional expression is parsed by the Java Parser
-
-Given a CompilationUnit
-When the following source is parsed:
-public class A{
-	static <T> Predicate<T> isEqual(Object targetRef) {
-	    return (null == targetRef)? Objects::isNull : object -> targetRef.equals(object);
-	}
-}
-Then ThenExpr in the conditional expression of the statement 1 in method 1 in class 1 is LambdaExpr
-=======
 Scenario: simple cast on lambda expression can be parsed
 
 Given a CompilationUnit
@@ -280,9 +268,6 @@ class A {
         };
 }
 Then all nodes refer to their parent
-<<<<<<< HEAD
->>>>>>> issue 149: add test for simple cast on a lambda expression
-=======
 
 Scenario: a combined cast on lambda expression can be parsed
 
@@ -295,9 +280,6 @@ class A {
         };
 }
 Then all nodes refer to their parent
-<<<<<<< HEAD
->>>>>>> issue 149: add test to verify that a combined cast on a lambda expression can be parsed
-=======
 
 Scenario: a combined cast on a literal can be parsed
 
@@ -308,4 +290,3 @@ class A {
 }
 Then all nodes refer to their parent
 
->>>>>>> issue 149: add test to verify that a combined cast on a literal can be parsed
