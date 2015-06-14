@@ -295,4 +295,17 @@ class A {
         };
 }
 Then all nodes refer to their parent
+<<<<<<< HEAD
 >>>>>>> issue 149: add test to verify that a combined cast on a lambda expression can be parsed
+=======
+
+Scenario: a combined cast on a literal can be parsed
+
+Given a CompilationUnit
+When the following source is parsed:
+class A {
+    static int a = (Comparator<ChronoLocalDate> & Serializable) 1;
+}
+Then all nodes refer to their parent
+
+>>>>>>> issue 149: add test to verify that a combined cast on a literal can be parsed
