@@ -10,4 +10,5 @@ notifications:
     on_success: always  # options: [always|never|change] default: always
     on_failure: always  # options: [always|never|change] default: always
 
-# http://lint.travis-ci.org/ validator
+after_success:
+  - mvn cobertura:cobertura coveralls:report
