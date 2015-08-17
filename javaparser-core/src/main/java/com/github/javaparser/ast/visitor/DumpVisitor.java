@@ -501,6 +501,20 @@ public final class DumpVisitor implements VoidVisitor<Object> {
 		}
 	}
 
+    @Override public void visit(final MultiBoundType n, final Object arg) {
+        printJavaComment(n.getComment(), arg);
+        boolean isFirst = true;
+        for (ReferenceType element : n.getElements()) {
+            element.accept(this, arg);
+            if (isFirst) {
+                isFirst = false;
+            } else {
+                printer.print(" & ");
+            }
+        }
+    }
+
+
 	@Override public void visit(final WildcardType n, final Object arg) {
 		printJavaComment(n.getComment(), arg);
 		if (n.getAnnotations() != null) {
