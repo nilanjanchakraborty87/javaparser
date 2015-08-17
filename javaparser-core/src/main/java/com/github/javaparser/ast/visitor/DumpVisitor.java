@@ -1038,8 +1038,8 @@ public final class DumpVisitor implements VoidVisitor<Object> {
 
 		if (!isNullOrEmpty(n.getThrows())) {
 			printer.print(" throws ");
-			for (final Iterator<NameExpr> i = n.getThrows().iterator(); i.hasNext();) {
-				final NameExpr name = i.next();
+			for (final Iterator<ReferenceType> i = n.getThrows().iterator(); i.hasNext();) {
+				final ReferenceType name = i.next();
 				name.accept(this, arg);
 				if (i.hasNext()) {
 					printer.print(", ");
