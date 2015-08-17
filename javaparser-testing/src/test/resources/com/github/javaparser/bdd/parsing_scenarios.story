@@ -256,7 +256,6 @@ Then method 1 class 1 is a default method
 Then method 2 class 1 is not a default method
 Then all nodes refer to their parent
 
-
 Scenario: simple cast on lambda expression can be parsed
 
 Given a CompilationUnit
