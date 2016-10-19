@@ -73,7 +73,7 @@ final class ASTParser {
         ReInit(new StreamProvider(in, encoding));
     }
 
-    private <T extends Node> NodeList<T> add(NodeList<T> list, T obj) {
+    private <T extends NodeContainer> NodeList<T> add(NodeList<T> list, T obj) {
     	if (list == null) {
     		list = new NodeList<T>();
     	}
@@ -89,7 +89,7 @@ final class ASTParser {
     	return list;
     }
     
-    private static <X extends Node> NodeList<X> emptyList() {
+    private static <X extends NodeContainer> NodeList<X> emptyList() {
         return new NodeList<X>();
     }
     

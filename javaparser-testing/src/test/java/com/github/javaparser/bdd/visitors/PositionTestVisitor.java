@@ -520,6 +520,10 @@ public class PositionTestVisitor extends VoidVisitorAdapter<Object> {
         super.visit(n, arg);
     }
 
+    void doTest(final NodeList nodeList) {
+        // nothing to do
+    }
+
     void doTest(final Node node) {
         assertThat(node.getBegin().line, is(greaterThanOrEqualTo(0)));
         assertThat(node.getBegin().column, is(greaterThanOrEqualTo(0)));

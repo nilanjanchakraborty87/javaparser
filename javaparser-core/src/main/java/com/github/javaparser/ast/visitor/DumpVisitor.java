@@ -1573,9 +1573,6 @@ public class DumpVisitor implements VoidVisitor<Object> {
 		if (node instanceof Comment) return;
 
 		Node parent = node.getParentNode();
-		while (parent != null && parent instanceof NodeList) {
-			parent = parent.getParentNode();
-		}
 		if (parent == null) return;
 		List<Node> everything = new LinkedList<>();
 		everything.addAll(parent.getBackwardsCompatibleChildrenNodes());
@@ -1598,7 +1595,6 @@ public class DumpVisitor implements VoidVisitor<Object> {
 			nodeToPrint.accept(this, null);
 		}
 	}
-
 
 	private void printOrphanCommentsEnding(final Node node) {
 		List<Node> everything = new LinkedList<>();

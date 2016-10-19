@@ -44,7 +44,7 @@ import static com.github.javaparser.utils.Utils.option;
  * 
  * @author Julio Vilmar Gesser
  */
-public class ModifierVisitorAdapter<A> implements GenericVisitor<Node, A> {
+public class ModifierVisitorAdapter<A> implements GenericVisitor<NodeContainer, A> {
     @Override public Node visit(final AnnotationDeclaration n, final A arg) {
 		visitAnnotations(n, arg);
 		visitComment(n, arg);
@@ -704,7 +704,7 @@ public class ModifierVisitorAdapter<A> implements GenericVisitor<Node, A> {
 	}
 
 	@Override
-	public Node visit(NodeList n, A arg) {
+	public NodeContainer visit(NodeList n, A arg) {
 		for (int i = 0; i < n.size(); i++) {
 			n.set(i, n.get(i).accept(this, arg));
 		}

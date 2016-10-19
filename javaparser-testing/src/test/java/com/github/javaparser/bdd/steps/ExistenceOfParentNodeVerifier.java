@@ -46,7 +46,7 @@ class ExistenceOfParentNodeVerifier {
     }
 
     private static class Verifier extends VoidVisitorAdapter<Void> {
-        private static void assertParentIsSet(Node n) {
+        private static void assertParentIsSet(NodeContainer n) {
             assertThat(n + " has no parent set!", n.getParentNode(), is(notNullValue()));
         }
 

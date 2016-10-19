@@ -21,14 +21,6 @@
 
 package com.github.javaparser.ast;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.IdentityHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
-
 import com.github.javaparser.Position;
 import com.github.javaparser.Range;
 import com.github.javaparser.ast.comments.BlockComment;
@@ -37,12 +29,11 @@ import com.github.javaparser.ast.comments.LineComment;
 import com.github.javaparser.ast.visitor.*;
 import com.github.javaparser.utils.PositionUtils;
 
+import java.lang.reflect.Field;
 import java.util.*;
 
-import static com.github.javaparser.utils.Utils.assertNotNull;
-import static com.github.javaparser.utils.Utils.none;
-import static com.github.javaparser.utils.Utils.some;
-import static java.util.Collections.*;
+import static com.github.javaparser.utils.Utils.*;
+import static java.util.Collections.unmodifiableList;
 
 /**
  * Abstract class for all nodes of the AST.
@@ -53,7 +44,7 @@ import static java.util.Collections.*;
  * 
  * @author Julio Vilmar Gesser
  */
-public abstract class Node implements Cloneable {
+public abstract class Node implements Cloneable, NodeContainer {
     /**
      * This can be used to sort nodes on position.
      */
@@ -73,33 +64,6 @@ public abstract class Node implements Cloneable {
     public Node(Range range) {
         this.range = range;
     }
-
-    /**
-     * Accept method for visitor support.
-     * 
-     * @param <R>
-     *            the type the return value of the visitor
-     * @param <A>
-     *            the type the argument passed to the visitor
-     * @param v
-     *            the visitor implementation
-     * @param arg
-     *            the argument passed to the visitor
-     * @return the result of the visit
-     */
-    public abstract <R, A> R accept(GenericVisitor<R, A> v, A arg);
-
-    /**
-     * Accept method for visitor support.
-     * 
-     * @param <A>
-     *            the type the argument passed for the visitor
-     * @param v
-     *            the visitor implementation
-     * @param arg
-     *            any value relevant for the visitor
-     */
-    public abstract <A> void accept(VoidVisitor<A> v, A arg);
 
     /**
      * This is a comment associated with this node.
@@ -220,7 +184,7 @@ public abstract class Node implements Cloneable {
 
     @Override
     public Node clone() {
-        return this.accept(new CloneVisitor(), null);
+        return (Node)this.accept(new CloneVisitor(), null);
     }
 
     public Node getParentNode() {
@@ -260,14 +224,7 @@ public abstract class Node implements Cloneable {
     public List<Node> getBackwardsCompatibleChildrenNodes() {
         List<Node> children = new ArrayList<>();
         for (Node childNode : getChildrenNodes()) {
-            // Avoid attributing comments to NodeLists by pretending they don't exist.
-            if (childNode instanceof NodeList) {
-                for (Node subChildNode : ((NodeList<Node>) childNode)) {
-                    children.add(subChildNode);
-                }
-            } else {
-                children.add(childNode);
-            }
+            children.add(childNode);
         }
         PositionUtils.sortByBeginPosition(children);
         return children;
@@ -345,13 +302,13 @@ public abstract class Node implements Cloneable {
         }
     }
 
-    protected void setAsParentNodeOf(Node childNode) {
+    public void setAsParentNodeOf(NodeContainer childNode) {
         if (childNode != null) {
             childNode.setParentNode(this);
         }
     }
 
-    protected void setAsParentNodeOf(Optional<? extends Node> childNode) {
+    protected void setAsParentNodeOf(Optional<? extends NodeContainer> childNode) {
         assertNotNull(childNode);
         childNode.ifPresent(c -> c.setParentNode(this));
     }

@@ -36,7 +36,7 @@ import java.util.Optional;
 
 import static com.github.javaparser.utils.Utils.option;
 
-public class CloneVisitor implements GenericVisitor<Node, Object> {
+public class CloneVisitor implements GenericVisitor<NodeContainer, Object> {
 
 	@Override
 	public Node visit(CompilationUnit _n, Object _arg) {
@@ -1190,10 +1190,10 @@ public class CloneVisitor implements GenericVisitor<Node, Object> {
 	}
 
 	@Override
-	public Node visit(NodeList n, Object arg) {
-		NodeList<Node> newNodes = new NodeList<>(n.getRange(), null);
+	public NodeContainer visit(NodeList n, Object arg) {
+		NodeList<Node> newNodes = new NodeList<>(null);
 		for (Object node : n) {
-			Node resultNode = ((Node)node).accept(this, arg);
+			Node resultNode = (Node)((Node)node).accept(this, arg);
 			if(resultNode!=null){
 				newNodes.add(resultNode);
 			}
@@ -1262,10 +1262,10 @@ public class CloneVisitor implements GenericVisitor<Node, Object> {
 	}
 
     @SuppressWarnings("unchecked")
-    protected <T extends Node> T cloneNode(T _node, Object _arg) {
+    protected <T extends NodeContainer> T cloneNode(T _node, Object _arg) {
         if (_node == null)
             return null;
-        Node r = _node.accept(this, _arg);
+        NodeContainer r = _node.accept(this, _arg);
         if (r == null)
             return null;
         return (T) r;
