@@ -52,7 +52,7 @@ public abstract class Node implements Cloneable, NodeContainer {
 
     private Range range;
 
-    private Node parentNode;
+    private NodeContainer parentNode;
 
     private List<Node> childrenNodes = new LinkedList<>();
     private List<Comment> orphanComments = new LinkedList<>();
@@ -187,17 +187,17 @@ public abstract class Node implements Cloneable, NodeContainer {
         return (Node)this.accept(new CloneVisitor(), null);
     }
 
-    public Node getParentNode() {
+    public NodeContainer getParentNode() {
         return parentNode;
     }
 
     @SuppressWarnings("unchecked")
     public <T> T getParentNodeOfType(Class<T> classType) {
-        Node parent = parentNode;
+        NodeContainer parent = parentNode;
         while (parent != null) {
             if (classType.isAssignableFrom(parent.getClass()))
                 return (T) parent;
-            parent = parent.parentNode;
+            parent = parent.getParentNode();
         }
         return null;
     }
@@ -282,15 +282,15 @@ public abstract class Node implements Cloneable, NodeContainer {
      *
      * @param parentNode node to be set as parent
      */
-    public void setParentNode(Node parentNode) {
+    public void setParentNode(NodeContainer parentNode) {
         // remove from old parent, if any
         if (this.parentNode != null) {
-            this.parentNode.childrenNodes.remove(this);
+            this.parentNode.removeChild(this);
         }
         this.parentNode = parentNode;
         // add to new parent, if any
         if (this.parentNode != null) {
-            this.parentNode.childrenNodes.add(this);
+            this.parentNode.addChild(this);
         }
     }
 
@@ -393,7 +393,7 @@ public abstract class Node implements Cloneable, NodeContainer {
      * @throws RuntimeException if it fails in an unexpected way
      */
     public boolean remove() {
-        Node parentNode = this.parentNode;
+        NodeContainer parentNode = this.parentNode;
         if (parentNode == null)
             return false;
         boolean success = false;
@@ -430,4 +430,6 @@ public abstract class Node implements Cloneable, NodeContainer {
         setParentNode(null);
         return success;
     }
+
+    
 }

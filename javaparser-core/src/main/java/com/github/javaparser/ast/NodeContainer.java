@@ -7,7 +7,7 @@ import com.github.javaparser.ast.visitor.VoidVisitor;
  * It can contain nodes without being necessarily a Node.
  */
 public interface NodeContainer {
-    void setParentNode(Node node);
+    void setParentNode(NodeContainer node);
     void setAsParentNodeOf(NodeContainer node);
 
     /**
@@ -38,4 +38,8 @@ public interface NodeContainer {
     <A> void accept(VoidVisitor<A> v, A arg);
 
     NodeContainer getParentNode();
+
+    void addChild(NodeContainer node);
+
+    void removeChild(NodeContainer node);
 }

@@ -13,6 +13,8 @@ import java.util.stream.Stream;
  * @param <N> the type of nodes contained.
  */
 public class NodeList<N extends NodeContainer> implements Iterable<N>, NodeContainer {
+    private NodeContainer parentContainer;
+
     // TODO we probably want to use the already existing childrenNodes list for this.
     private List<N> innerList = new ArrayList<>(0);
 
@@ -28,6 +30,16 @@ public class NodeList<N extends NodeContainer> implements Iterable<N>, NodeConta
         own(node);
         innerList.add(node);
         return this;
+    }
+
+    @Override
+    public void addChild(NodeContainer node) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void removeChild(NodeContainer node) {
+        throw new UnsupportedOperationException();
     }
 
     private void own(N node) {
@@ -135,17 +147,19 @@ public class NodeList<N extends NodeContainer> implements Iterable<N>, NodeConta
     }
 
     @Override
-    public void setParentNode(Node node) {
-        throw new UnsupportedOperationException();
+    public void setParentNode(NodeContainer node) {
+        parentContainer = node;
     }
 
     @Override
-    public void setAsParentNodeOf(NodeContainer node) {
-        throw new UnsupportedOperationException();
+    public void setAsParentNodeOf(NodeContainer child) {
+        if (child != null) {
+            child.setParentNode(this);
+        }
     }
 
     @Override
     public NodeContainer getParentNode() {
-        throw new UnsupportedOperationException();
+        return parentContainer;
     }
 }
