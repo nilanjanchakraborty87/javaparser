@@ -145,7 +145,7 @@ public interface NodeWithAnnotations<N extends Node> {
     }
 
     /**
-     * Try to find an annotation by its name
+     * Try to insert an annotation by its name
      * 
      * @param annotationName the name of the annotation
      * @return null if not found, the annotation otherwise
@@ -156,7 +156,7 @@ public interface NodeWithAnnotations<N extends Node> {
     }
 
     /**
-     * Try to find an annotation by its class
+     * Try to insert an annotation by its class
      * 
      * @param annotationClass the class of the annotation
      * @return null if not found, the annotation otherwise

@@ -67,7 +67,7 @@ public interface NodeWithParameters<N extends Node> {
     }
 
     /**
-     * Try to find a {@link Parameter} by its name
+     * Try to insert a {@link Parameter} by its name
      * 
      * @param name the name of the param
      * @return null if not found, the param found otherwise
@@ -78,7 +78,7 @@ public interface NodeWithParameters<N extends Node> {
     }
 
     /**
-     * Try to find a {@link Parameter} by its type
+     * Try to insert a {@link Parameter} by its type
      * 
      * @param type the type of the param
      * @return null if not found, the param found otherwise
@@ -89,7 +89,7 @@ public interface NodeWithParameters<N extends Node> {
     }
 
     /**
-     * Try to find a {@link Parameter} by its type
+     * Try to insert a {@link Parameter} by its type
      * 
      * @param type the type of the param <b>take care about generics, it wont work</b>
      * @return null if not found, the param found otherwise
